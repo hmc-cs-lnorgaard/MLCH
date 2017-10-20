@@ -264,7 +264,9 @@
                         <!-- Search spwords for corresponding w/c/pc -->
                         
                         <!-- DISPLAY LINE NUMBER -->
-                        <p class="lineNum"><%= lineNum %></p>
+                        <% if lineNum.to_i % 5 == 0 %>
+                            <p class="lineNum"><%= lineNum %></p>
+                        <% end %>
 
                         <% wordIDs.each do |id| %>
                             <% spwords.each do |word| %>
@@ -312,10 +314,81 @@
     </div>
 
     <script>
-        document.querySelector(".script-main").addEventListener("click", doCut, false);
+
+        document.querySelector(".script-main").addEventListener("mousedown", mouseDown, false);
+        document.querySelector(".script-main").addEventListener("mouseover", mouseOver, false);
+        document.querySelector(".script-main").addEventListener("mouseup", mouseUp, false);
+
+        down = false
+        toCut = false
         // all words will need to be printed within the div class "script-main"
-        function doCut(e) {
-            var clickedItem = e.target;
+
+        function mouseDown(e) {
+            if (e.srcElement.className === "word" || e.srcElement.className === "punc") {
+                startIndex = lowIndex = highIndex = Array.from(e.srcElement.parentNode.children).indexOf(e.srcElement)
+                down = true
+                toCut = !(e.srcElement.dataset.cut.to_b)
+            }
+        }
+
+        function mouseOver(e) {
+            if (down) {
+                // Clear previous highlighting
+                Array.from(e.srcElement.parentNode.children).slice(lowIndex, highIndex + 1).forEach(
+                    function(element) {
+                        element.style.backgroundColor = "#FFFFFF"
+                    }
+                )
+                // Update selection
+                if (e.srcElement.className == "word" | e.srcElement.className == "punc") {
+                    newIndex = Array.from(e.srcElement.parentNode.children).indexOf(e.srcElement)
+                    lowIndex = newIndex > startIndex ? startIndex : newIndex
+                    highIndex = newIndex > startIndex ? newIndex : startIndex
+                }
+                // Highlight and decide on cutting or uncutting
+                toCut = false
+                Array.from(e.srcElement.parentNode.children).slice(lowIndex, highIndex + 1).forEach(
+                    function(element) {
+                        if (element.className == "word" || element.className == "punc"){
+                            element.style.backgroundColor = "#0090FF";
+                            if (element.dataset.cut == "false") {
+                                toCut = true
+                            }
+                        }
+                    }
+                )
+            }
+        }
+
+        function mouseUp(e) {
+            if (lowIndex == highIndex) {
+                e.srcElement.dataset.cut == "true" ? uncut(e.srcElement) : cut(e.srcElement)
+            } else {
+                Array.from(e.srcElement.parentNode.children).slice(lowIndex, highIndex + 1).forEach(
+                    function(element){
+                        element.style.backgroundColor = '#FFFFFF'
+                        toCut ? cut(element) : uncut(element)
+                    }
+                )
+            }
+            newIndex = lowIndex = highIndex = startIndex = null
+            down = toCut = false
+        }
+
+        function cut(element) {
+            element.style.color = "#D3D3D3"
+            element.style.textDecoration = "line-through"
+            element.dataset.cut = "true"
+        }
+
+        function uncut(clickedItem) {
+            clickedItem.style.color = "#000000"
+            clickedItem.style.textDecoration = "none"
+            clickedItem.dataset.cut = "false"
+        }
+
+        // NOT CURRENTLY USED, LEFT FOR FUTURE INFO
+        function doCut(clickedItem) {
             // act
             if (clickedItem.getAttribute("class") == "acthead") {
             //    if (clickedItem.tagName.toLowerCase() == "button") {
