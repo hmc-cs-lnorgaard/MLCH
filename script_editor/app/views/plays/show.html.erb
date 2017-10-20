@@ -324,10 +324,12 @@
         // all words will need to be printed within the div class "script-main"
 
         function mouseDown(e) {
-            if (e.srcElement.className === "word" || e.srcElement.className === "punc") {
-                startIndex = lowIndex = highIndex = Array.from(e.srcElement.parentNode.children).indexOf(e.srcElement)
-                down = true
-                toCut = !(e.srcElement.dataset.cut.to_b)
+            if (e.srcElement.className == "word" || e.srcElement.className == "punc" ||
+                e.srcElement.className == "stage") {
+                    startIndex = lowIndex = highIndex = Array.from(e.srcElement.parentNode.children)
+                                                             .indexOf(e.srcElement)
+                    down = true
+                    toCut = !(e.srcElement.dataset.cut.to_b)
             }
         }
 
@@ -340,20 +342,22 @@
                     }
                 )
                 // Update selection
-                if (e.srcElement.className == "word" | e.srcElement.className == "punc") {
-                    newIndex = Array.from(e.srcElement.parentNode.children).indexOf(e.srcElement)
-                    lowIndex = newIndex > startIndex ? startIndex : newIndex
-                    highIndex = newIndex > startIndex ? newIndex : startIndex
+                if (e.srcElement.className == "word" || e.srcElement.className == "punc" ||
+                    e.srcElement.className == "stage") {
+                        newIndex = Array.from(e.srcElement.parentNode.children).indexOf(e.srcElement)
+                        lowIndex = newIndex > startIndex ? startIndex : newIndex
+                        highIndex = newIndex > startIndex ? newIndex : startIndex
                 }
                 // Highlight and decide on cutting or uncutting
                 toCut = false
                 Array.from(e.srcElement.parentNode.children).slice(lowIndex, highIndex + 1).forEach(
                     function(element) {
-                        if (element.className == "word" || element.className == "punc"){
-                            element.style.backgroundColor = "#0090FF";
-                            if (element.dataset.cut == "false") {
-                                toCut = true
-                            }
+                        if (element.className == "word" || element.className == "punc" ||
+                            element.className == "stage"){
+                                element.style.backgroundColor = "#0090FF";
+                                if (element.dataset.cut == "false") {
+                                    toCut = true
+                                }
                         }
                     }
                 )
@@ -376,15 +380,21 @@
         }
 
         function cut(element) {
-            element.style.color = "#D3D3D3"
-            element.style.textDecoration = "line-through"
-            element.dataset.cut = "true"
+            if (element.className == "word" || element.className == "punc" ||
+                element.className == "stage") {
+                    element.style.color = "#D3D3D3"
+                    element.style.textDecoration = "line-through"
+                    element.dataset.cut = "true"
+            }
         }
 
-        function uncut(clickedItem) {
-            clickedItem.style.color = "#000000"
-            clickedItem.style.textDecoration = "none"
-            clickedItem.dataset.cut = "false"
+        function uncut(element) {
+            if (element.className == "word" || element.className == "punc" ||
+                element.className == "stage") {
+                    element.style.color = "#000000"
+                    element.style.textDecoration = "none"
+                    element.dataset.cut = "false"
+            }
         }
 
         // NOT CURRENTLY USED, LEFT FOR FUTURE INFO

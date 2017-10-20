@@ -103,6 +103,8 @@ div.script-main {
 // For editable word buttons
 /////////////////////////////////
 
+button:focus {outline:0;}
+
 .punc {
     background:none;
     background-color: none;
