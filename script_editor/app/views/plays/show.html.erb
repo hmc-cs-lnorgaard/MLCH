@@ -125,6 +125,88 @@
             <!-- This button shows the play's analytics -->
             <button class="nav-analytics" id="analytics-button">ANALYTICS</button>
 
+            <!-- This button toggles the strikethrough edits' visibility -->
+             <!-- Not sure which one to use for display in the else statement, initial or inherit -->
+            <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> Hide Edits </button>
+
+            <script>
+                var mainScript = document.getElementsByClassName("script-main");
+                var toggleBtn = document.getElementById("viewToggle-button");
+                toggleBtn.curState = "showing";
+                toggleBtn.onclick = function() {
+                    console.log(mainScript);
+                    var words = document.getElementsByClassName("word");
+                    var punctuation = document.getElementsByClassName("punc");
+                    var directions = document.getElementsByClassName("stage");
+                    for (var i = 0; i < words.length ; i++) //toggle words
+                    {
+                        if (toggleBtn.curState == "showing")    //wish to hide edits 
+                        {                        
+                            if (words[i].dataset.cut == "true")
+                            {
+                                words[i].style.display == 'none';
+                                words[i].style.cssText += "display: none;"
+                            } 
+                        }
+                        else    //wish to show edits
+                        {
+                            words[i].style.display = 'initial';                            
+                        }
+                    }
+
+                    for (var i = 0; i < punctuation.length ; i++) //toggle punctuation
+                    {
+                        if (toggleBtn.curState == "showing")    //wish to hide edits 
+                        {                        
+                            if (punctuation[i].dataset.cut == "true")
+                            {
+                                punctuation[i].style.display == 'none';
+                                punctuation[i].style.cssText += "display: none;"
+                            } 
+                        }
+                        else    //wish to show edits
+                        {
+                            punctuation[i].style.display = 'initial';                            
+                        }
+                    }
+
+                    for (var i = 0; i < directions.length ; i++) //toggle stage directions
+                    {
+                        if (toggleBtn.curState == "showing")    //wish to hide edits 
+                        {                        
+                            if (directions[i].dataset.cut == "true")
+                            {
+                                directions[i].style.display == 'none';
+                                directions[i].style.cssText += "display: none;"
+                            } 
+                        }
+                        else    //wish to show edits
+                        {
+                            directions[i].style.display = 'initial';                            
+                        }
+                    }
+
+                    //Change button from Show to Hide or vice versa 
+                    if (toggleBtn.curState == "hiding")  //wish to show edits
+                    {
+                        toggleBtn.curState = "showing";
+                        toggleBtn.innerHTML = "Hide Edits";
+                    } 
+                    else if (toggleBtn.curState == "showing")    //wish to hide edits 
+                    {
+                        toggleBtn.curState = "hiding";
+                        toggleBtn.innerHTML = "Show Edits";
+                    }
+                    else 
+                    {
+                        console.print ("Something's fucked up with the curState of the toggle button");
+                    }
+                }
+                
+
+             </script>>
+
+
             <!-- Create a button for each act and scene in the play -->
             <% currAct = 1 %>
             <% currScene = 1 %>
@@ -184,7 +266,7 @@
     <!-- 
         Parse the XML file for the actual script, and display everything 
     -->
-    <div class="script-main"> 
+    <div class="script-main" id = "script-main"> 
         <% currAct = 1 %>
         <% currScene = 1 %>
         <% currIndex = 1 %>  
