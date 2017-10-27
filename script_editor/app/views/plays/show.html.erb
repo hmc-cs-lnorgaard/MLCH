@@ -137,12 +137,9 @@
                     var directions = Array.from(document.getElementsByClassName("stage"));
                     var cuttableScript = words.concat(punctuation).concat(directions);
                     cuttableScript.forEach(function(word) {
-                        if (toggleBtn.curState == "showing") // User wishes to hide edit
+                        if (toggleBtn.curState == "showing" && word.dataset.cut == "true") // User wishes to hide edit
                         {
-                            if (word.dataset.cut == "true")
-                            {
-                                word.style.display = 'none'
-                            }
+                            word.style.display = 'none'
                         }
                         else //user wishes to show edits
                         {
