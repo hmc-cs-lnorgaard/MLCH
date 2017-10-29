@@ -472,10 +472,11 @@
         function nextSpeaker(srcElement, startIndex) {
             items = Array.from(srcElement.parentNode.children).splice(startIndex)
             for (element of items) {
-                if (element.className == "speaker" || element.className == "stage") {
+                if (element.className == "speaker" || element.className == "stage" || element.className == "sceneDiv" || element.className == "actDiv") {
                     return items.indexOf(element) + startIndex - 1
                 }
-            }          
+            }  
+            return items.length - 1
         }
 
         // NOT CURRENTLY USED, LEFT FOR FUTURE INFO
