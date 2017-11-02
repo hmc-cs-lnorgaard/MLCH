@@ -128,19 +128,7 @@
             <!-- This button toggles the strikethrough edits' visibility -->
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> Hide Edits </button>
 
-            <!-- this button will save the html string in local storage maybe -->
-            <button class="nav-synonpsis" id="saveButton">Save</button>
-            <script>
-                var saveBtn = document.getElementById("saveButton")
-                saveBtn.onclick = function() {
-                    // var htmlContents = document.head.innerHTML;
-                    // localStorage.setItem('MNDPlay', JSON.stringify(htmlContents ));
-
-                    // console.log(document.body)
-                    // console.log(localStorage.getItem('MNDPlay'))
-                }
-            </script>
-
+        
             <script>
                 var toggleBtn = document.getElementById("viewToggle-button");
                 toggleBtn.curState = "showing";
@@ -373,7 +361,6 @@
         document.querySelector(".script-main").addEventListener("mousedown", mouseDown, false);
         document.querySelector(".script-main").addEventListener("mouseover", mouseOver, false);
         document.querySelector(".script-main").addEventListener("mouseup", mouseUp, false);
-
 
         down = false
         toCut = false
