@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html><body>
+<html manifest="MND.appcache"><body>
     <p id="notice"></p>
 
     <!-- 
@@ -127,6 +127,19 @@
 
             <!-- This button toggles the strikethrough edits' visibility -->
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> Hide Edits </button>
+
+            <!-- this button will save the html string in local storage maybe -->
+            <button class="nav-synonpsis" id="saveButton">Save</button>
+            <script>
+                var saveBtn = document.getElementById("saveButton")
+                saveBtn.onclick = function() {
+                    // var htmlContents = document.head.innerHTML;
+                    // localStorage.setItem('MNDPlay', JSON.stringify(htmlContents ));
+
+                    // console.log(document.body)
+                    // console.log(localStorage.getItem('MNDPlay'))
+                }
+            </script>
 
             <script>
                 var toggleBtn = document.getElementById("viewToggle-button");
@@ -361,6 +374,7 @@
         document.querySelector(".script-main").addEventListener("mouseover", mouseOver, false);
         document.querySelector(".script-main").addEventListener("mouseup", mouseUp, false);
 
+
         down = false
         toCut = false
         parent = null
@@ -389,6 +403,9 @@
                     toCut = true
                 }
                 speakerCut = true
+
+                console.log('low index is ', lowIndex)
+                console.log('high index is ', highIndex)
             }
         }
 
@@ -439,44 +456,34 @@
 
         function cut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className.indexOf("stage") !== -1) {
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#D3D3D3"
                     element.style.textDecoration = "line-through"
                     element.dataset.cut = "true"
                     element.style.backgroundColor = '#FFFFFF'
+                    speakerCut = false
             }
-            else if (element.className == "speaker" && speakerCut == true) {
-                element.style.color = "#D3D3D3"
-                element.style.textDecoration = "line-through"
-                element.dataset.cut = "true"
-                speakerCut = false
-            } 
         }
 
         function uncut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className.indexOf("stage") !== -1) {
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#000000"
                     element.style.textDecoration = "none"
                     element.dataset.cut = "false"
                     element.style.backgroundColor = '#FFFFFF'
+                    speakerCut = false
             }
-            else if (element.className == "speaker" && speakerCut == true) {
-                element.style.color = "#000000"
-                element.style.textDecoration = "none"
-                element.dataset.cut = "false"
-                speakerCut = false
-            } 
         }
 
         function nextSpeaker(srcElement, startIndex) {
             items = Array.from(srcElement.parentNode.children).splice(startIndex)
             for (element of items) {
                 if (element.className == "speaker" || element.className == "stage" || element.className == "sceneDiv" || element.className == "actDiv") {
-                    return items.indexOf(element) + startIndex - 1
+                    return items.indexOf(element) + startIndex - 1 
                 }
             }  
-            return items.length - 1
+            return items.length - 1 + startIndex
         }
 
         // NOT CURRENTLY USED, LEFT FOR FUTURE INFO
