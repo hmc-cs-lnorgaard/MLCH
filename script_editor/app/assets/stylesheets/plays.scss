@@ -175,6 +175,24 @@ button:focus {outline:0;}
      padding:0!important;
 }
 
+p.analytic {
+   margin-top: 0px;
+   margin-bottom: 0px;
+}
+
+span.original {
+    width: 50%;
+    float: left;
+}
+
+span.concise {
+    width: 50%;
+    text-align: right;
+}
+
+.concise {
+}
+
 /////////////////////////////////
 // For the navigation bar
 /////////////////////////////////
