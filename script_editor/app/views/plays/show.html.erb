@@ -128,7 +128,10 @@
             <!-- This button toggles the strikethrough edits' visibility -->
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> Hide Edits </button>
 
-        
+            <!--
+                This script tag creates a button which will hide the edits made by the use to create
+                a concise and readable version of the script. It collects a list of all cuttable items from the document body by class name and loops through this list, checking for the state of the toggle button and if the text has been cut, and switching the display of the text accordingly. While this is a large set to loop over, it takes a minute amount of time to do.
+            -->
             <script>
                 var toggleBtn = document.getElementById("viewToggle-button");
                 toggleBtn.curState = "showing";
@@ -292,7 +295,10 @@
                             <% stageN = stage.attr('xml:id').to_s.gsub("stg-","").to_f %>
                             <!-- If there is a stage dir inside speech -->
                             <% if (stageN <= msN) and (stageN >= msN-1.0) %>
-                            <!-- display stage direction -->
+                            <!-- display stage direction  -->
+                            <!-- add a special class marker to this direction showing it is inside a speech.
+                                this enables the direction to be cut when a whole speech is cut by clicking on the 
+                                character name -->
                                 <button class="stage inside" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
                                 <% stages.delete(stage) %>
                             <% end %>
@@ -336,6 +342,9 @@
                         <!-- If there is a stage dir inside speech -->
                         <% if (stageN >= msN) and (stageN < msN+1.0) %>
                             <!-- display stage direction -->
+                            <!-- add a special class marker to this direction showing it is inside a speech.
+                                this enables the direction to be cut when a whole speech is cut by clicking on the 
+                                character name -->
                             <button class="stage inside" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
                             <% stages.delete(stage) %>
                         <% end %>
@@ -358,17 +367,21 @@
 
     <script>
 
+        //create the event listeners for a user highlighting over text to be cut
         document.querySelector(".script-main").addEventListener("mousedown", mouseDown, false);
         document.querySelector(".script-main").addEventListener("mouseover", mouseOver, false);
         document.querySelector(".script-main").addEventListener("mouseup", mouseUp, false);
 
-        down = false
-        toCut = false
-        parent = null
-        speakerCut = true
+
+        down = false //represents if the mouse is down
+        toCut = false //represents whether the text is to be cut or not
+        parent = null //represents the parent node of the cut items
+        speakerCut = true //version of toCut for cutting whole speeches when a character name is clicked
 
         // all words will need to be printed within the div class "script-main"
 
+        //function which takes in the clicked element and if it is a cuttable item, records the parent element 
+        //as well as the index of it's position as a child element
         function mouseDown({ srcElement }) {
             if (srcElement.className == "word" || srcElement.className == "punc" ||
                 srcElement.className == "stage") {
@@ -376,12 +389,13 @@
                     startIndex = lowIndex = highIndex = Array.from(parent.children)
                                                              .indexOf(srcElement)
                     down = true
-                    toCut = !(srcElement.dataset.cut.to_b)
+                    toCut = !(srcElement.dataset.cut.to_b)//this line currently doesn't do anything bc to_b doesnt work
             }
             else if (srcElement.className == "speaker") {
                 parent = srcElement.parentNode
                 lowIndex = Array.from(parent.children).indexOf(srcElement)
-                highIndex = nextSpeaker(srcElement, lowIndex + 2)
+                highIndex = nextSpeaker(srcElement, lowIndex + 2) //when cutting a whole speech, need the index of the
+                //next speech rather than the location of the mouseup
 
                 if (srcElement.dataset.cut == "true") {
                     toCut = false
@@ -396,6 +410,7 @@
             }
         }
 
+        //function to keep track of what has been highlighted to cut
         function mouseOver({ srcElement }) {
             if (down) {
                 // Clear previous highlighting
@@ -418,7 +433,7 @@
                         if (element.className == "word" || element.className == "punc" ||
                             element.className == "stage"){
                                 element.style.backgroundColor = "#B8D7FB";
-                                if (element.dataset.cut == "false") {
+                                if (element.dataset.cut == "false") { //prioritize cutting over uncutting
                                     toCut = true
                                 }
                         }
@@ -427,6 +442,7 @@
             }
         }
 
+        //function to cut or uncut all the highlighted items
         function mouseUp({ srcElement }) {
             if (lowIndex == highIndex) {
                 srcElement.dataset.cut == "true" ? uncut(srcElement) : cut(srcElement)
@@ -441,6 +457,7 @@
             down = toCut = false
         }
 
+        //next 2 functions actually change the styling of the items
         function cut(element) {
             if (element.className == "word" || element.className == "punc" ||
                 element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
@@ -463,6 +480,7 @@
             }
         }
 
+        //obtains the index of the next speech, act, or scene which ends the speech to be cut
         function nextSpeaker(srcElement, startIndex) {
             items = Array.from(srcElement.parentNode.children).splice(startIndex)
             for (element of items) {
@@ -470,7 +488,7 @@
                     return items.indexOf(element) + startIndex - 1 
                 }
             }  
-            return items.length - 1 + startIndex
+            return items.length - 1 + startIndex //if we hit the very end of the play
         }
 
         // NOT CURRENTLY USED, LEFT FOR FUTURE INFO
