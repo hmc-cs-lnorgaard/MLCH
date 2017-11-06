@@ -126,7 +126,9 @@
             <button class="nav-analytics" id="analytics-button">ANALYTICS</button>
 
             <!-- This button toggles the strikethrough edits' visibility -->
-            <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> Hide Edits </button>
+            <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> HIDE EDITS </button>
+
+            <button class = "nav-analytics" id="save-button"> SAVE </button>
 
             <script>
                 var toggleBtn = document.getElementById("viewToggle-button");
@@ -476,7 +478,7 @@
                     return items.indexOf(element) + startIndex - 1
                 }
             }  
-            return items.length - 1
+            return items.length - 1 + startIndex
         }
 
         // NOT CURRENTLY USED, LEFT FOR FUTURE INFO
@@ -662,6 +664,30 @@
                 modal.style.display = "none";
             }
         } 
+    </script>
+    <form action="/plays/:save" method="post" id="saveForm">
+        <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+        <input type="hidden" name="savedocument" value="">
+        <input type="submit" value="submit"/>
+    </form>
+      <!--   name="save-button" value="Save"> -->
+    <script>
+
+        // document.getElementById("saveForm").elements["save-button"].addEventListener("click", saveFunction, false)
+        // function saveFunction() {
+        var saveBtn = document.getElementById("save-button")
+        saveBtn.onclick = function() {          
+            var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
+            var textbox = document.createElement("full-script")
+            textbox.type = 'text'
+            textbox.value = fullScript
+
+            document.getElementById("saveForm").elements["savedocument"] = textbox.value
+
+            // document.getElementById("saveForm").submit()
+
+        }
+
     </script>
 
 </body></html>
