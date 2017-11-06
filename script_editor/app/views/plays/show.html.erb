@@ -441,34 +441,22 @@
 
         function cut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className.indexOf("stage") !== -1) {
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#D3D3D3"
                     element.style.textDecoration = "line-through"
                     element.dataset.cut = "true"
                     element.style.backgroundColor = '#FFFFFF'
-            }
-            else if (element.className == "speaker" && speakerCut == true) {
-                element.style.color = "#D3D3D3"
-                element.style.textDecoration = "line-through"
-                element.dataset.cut = "true"
-                speakerCut = false
-            } 
+                    speakerCut = false
         }
 
         function uncut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className.indexOf("stage") !== -1) {
+                element.className.indexOf("stage") !== -1m|| (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#000000"
                     element.style.textDecoration = "none"
                     element.dataset.cut = "false"
                     element.style.backgroundColor = '#FFFFFF'
-            }
-            else if (element.className == "speaker" && speakerCut == true) {
-                element.style.color = "#000000"
-                element.style.textDecoration = "none"
-                element.dataset.cut = "false"
-                speakerCut = false
-            } 
+                    speakerCut = false
         }
 
         function nextSpeaker(srcElement, startIndex) {
