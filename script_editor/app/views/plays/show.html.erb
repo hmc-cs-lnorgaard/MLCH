@@ -630,7 +630,8 @@
             modal.style.display = "none";
         }
 
-        // From MDN
+        // Modified from MDN for set unions
+        // This isn't used after optimization, but could be useful later
         union = function(setA, setB) {
             var union = new Set(setA);
             for (var elem of setB) {
@@ -650,40 +651,56 @@
             script = document.querySelector(".script-main");
             scenes = getScenes(script);
             analytics = countAnalytics(scenes);
-            innerHTML = `<p class="analytic"><span class="original">Original</span><span class="concise">Concise</span></p><pclass="analytic"><span class="original">Lines: ${analytics.lines.size}</span><span class="concise">Concise Lines: ${analytics.uncutLines.size}</span></p>`
-            for (character in characterLines) {
-                innerHTML += `<pclass="analytic"><span class="original">${character}: ${characterLines[character].total.size}</span><span class="concise">${character}: ${characterLines[character].uncut.size}</span></p>`
+            formatAnalytics(analytics);
+        }
+
+        formatAnalytics = function(analytics) {
+            // setup
+            innerHTML = `<p class="analytic"><span class="original">Original</span><span class="concise">Concise</span></p>`;
+            // total lines
+            innerHTML += `<p class="analytic"><span class="original">Lines: ${analytics.lines.size}</span><span class="concise">Concise Lines: ${analytics.uncutLines.size}</span></p>`
+            // character lines
+            for (character in analytics.characterLines) {
+                innerHTML += `<p class="analytic"><span class="original">${character}: ${characterLines[character].total.size}</span><span class="concise">${character}: ${characterLines[character].uncut.size}</span></p>`
             }
             document.getElementById('hidden-analytics').innerHTML = innerHTML;
         }
 
         getScenes = function (script) {
-            acts = new Set([script.children[0]]);
+            actsAndScenes = new Set([script.children[0]]);
             scenes = new Set();
-
+            // begin searching
             let searching = true;
             while(searching) {
                 searching = false;
-                union(acts, scenes).forEach(
+                // Prevents researching
+                newSet = new Set(Array.from(actsAndScenes.values()));
+                actsAndScenes.forEach(
                     function(actOrScene) {
                         Array.from(actOrScene.children).forEach(
                             function(child) {
                                 if (child.className == 'actDiv') {
-                                    if (!acts.has(child)) {
-                                        acts.add(child)
+                                    // these ifs are for searching, not the sets
+                                    if (!actsAndScenes.has(child)) {
+                                        newSet.add(child)
                                         searching = true
                                     }
                                 }
                                 if (child.className == 'sceneDiv') {
+                                    // these ifs are for searching, not the sets
                                     if (!scenes.has(child)) {
+                                        newSet.add(child)
                                         scenes.add(child)
                                         searching = true
                                     }
                                 }
                             }
                         )
+                        // avoid researching
+                        newSet.delete(actOrScene)
                     }
                 )
+                actsAndScenes = newSet
             }
             return scenes
         }
