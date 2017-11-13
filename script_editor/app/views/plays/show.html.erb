@@ -129,7 +129,7 @@
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> HIDE EDITS </button>
 
             <button class = "nav-analytics" id="save-button"> SAVE </button>
-
+        
             <script>
                 var toggleBtn = document.getElementById("viewToggle-button");
                 toggleBtn.curState = "showing";
@@ -153,12 +153,12 @@
                     if (toggleBtn.curState == "hiding")  //wish to show edits
                     {
                         toggleBtn.curState = "showing"
-                        toggleBtn.innerHTML = "Hide Edits"
+                        toggleBtn.innerHTML = "HIDE EDITS"
                     } 
                     else if (toggleBtn.curState == "showing")    //wish to hide edits 
                     {
                         toggleBtn.curState = "hiding"
-                        toggleBtn.innerHTML = "Show Edits"
+                        toggleBtn.innerHTML = "SHOW EDITS"
                     }
                     else 
                     {
@@ -224,323 +224,320 @@
         </div>
     </div>
 
-     <div class="script-functionality">
-        <script>
+    <script>
 
-            document.querySelector(".script-main").addEventListener("mousedown", mouseDown, false);
-            document.querySelector(".script-main").addEventListener("mouseover", mouseOver, false);
-            document.querySelector(".script-main").addEventListener("mouseup", mouseUp, false);
+        document.querySelector(".script-main").addEventListener("mousedown", mouseDown, false);
+        document.querySelector(".script-main").addEventListener("mouseover", mouseOver, false);
+        document.querySelector(".script-main").addEventListener("mouseup", mouseUp, false);
 
-            down = false
-            toCut = false
-            parent = null
-            speakerCut = false
+        down = false
+        toCut = false
+        parent = null
+        speakerCut = true
 
-            // all words will need to be printed within the div class "script-main"
+        // all words will need to be printed within the div class "script-main"
 
-            function mouseDown({ srcElement }) {
-                if (srcElement.className == "word" || srcElement.className == "punc" ||
-                    srcElement.className == "stage") {
-                        parent = srcElement.parentNode
-                        startIndex = lowIndex = highIndex = Array.from(parent.children)
-                                                                 .indexOf(srcElement)
-                        down = true
-                        toCut = !(srcElement.dataset.cut.to_b)
-                }
-                else if (srcElement.className == "speaker") {
+        function mouseDown({ srcElement }) {
+            if (srcElement.className == "word" || srcElement.className == "punc" ||
+                srcElement.className == "stage") {
                     parent = srcElement.parentNode
-                    lowIndex = Array.from(parent.children).indexOf(srcElement)
-                    highIndex = nextSpeaker(srcElement, lowIndex + 2)
-
-                    if (srcElement.dataset.cut == "true") {
-                        toCut = false
-                    }
-                    else {
-                        toCut = true
-                    }
-                    speakerCut = true
-                }
+                    startIndex = lowIndex = highIndex = Array.from(parent.children)
+                                                             .indexOf(srcElement)
+                    down = true
+                    toCut = !(srcElement.dataset.cut.to_b)
             }
+            else if (srcElement.className == "speaker") {
+                parent = srcElement.parentNode
+                lowIndex = Array.from(parent.children).indexOf(srcElement)
+                highIndex = nextSpeaker(srcElement, lowIndex + 2)
 
-            function mouseOver({ srcElement }) {
-                if (down) {
-                    // Clear previous highlighting
-                    Array.from(parent.children).slice(lowIndex, highIndex + 1).forEach(
-                        function(element) {
-                            element.style.backgroundColor = "#FFFFFF"
-                        }
-                    )
-                    // Update selection
-                    if (srcElement.className == "word" || srcElement.className == "punc" ||
-                        srcElement.className.indexOf("stage") !== -1) {
-                            newIndex = Array.from(parent.children).indexOf(srcElement)
-                            lowIndex = newIndex > startIndex ? startIndex : newIndex
-                            highIndex = newIndex > startIndex ? newIndex : startIndex
-                    }
-                    // Highlight and decide on cutting or uncutting
+                if (srcElement.dataset.cut == "true") {
                     toCut = false
-                    Array.from(parent.children).slice(lowIndex, highIndex + 1).forEach(
-                        function(element) {
-                            if (element.className == "word" || element.className == "punc" ||
-                                element.className == "stage"){
-                                    element.style.backgroundColor = "#B8D7FB";
-                                    if (element.dataset.cut == "false") {
-                                        toCut = true
-                                    }
-                            }
-                        }
-                    )
                 }
-            }
-
-            function mouseUp({ srcElement }) {
-                if (lowIndex == highIndex) {
-                    srcElement.dataset.cut == "true" ? uncut(srcElement) : cut(srcElement)
-                } else {
-                    Array.from(parent.children).slice(lowIndex, highIndex + 1).forEach(
-                        function(element){
-                            toCut ? cut(element) : uncut(element)
-                        }
-                    )
+                else {
+                    toCut = true
                 }
-                newIndex = lowIndex = highIndex = startIndex = parent = null
-                down = toCut = false
+                speakerCut = true
             }
+        }
 
-            function cut(element) {
-                if (element.className == "word" || element.className == "punc" ||
-                    element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
-                        element.style.color = "#D3D3D3"
-                        element.style.textDecoration = "line-through"
-                        element.dataset.cut = "true"
-                        element.style.backgroundColor = '#FFFFFF'
-                        speakerCut = false
-                }
-            }
-
-            function uncut(element) {
-                if (element.className == "word" || element.className == "punc" ||
-                    element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
-                        element.style.color = "#000000"
-                        element.style.textDecoration = "none"
-                        element.dataset.cut = "false"
-                        element.style.backgroundColor = '#FFFFFF'
-                        speakerCut = false
-                }
-            }
-
-            function nextSpeaker(srcElement, startIndex) {
-                items = Array.from(srcElement.parentNode.children).splice(startIndex)
-                for (element of items) {
-                    if (element.className == "speaker" || element.className == "stage" || element.className == "sceneDiv" || element.className == "actDiv") {
-                        return items.indexOf(element) + startIndex - 1
+        function mouseOver({ srcElement }) {
+            if (down) {
+                // Clear previous highlighting
+                Array.from(parent.children).slice(lowIndex, highIndex + 1).forEach(
+                    function(element) {
+                        element.style.backgroundColor = "#FFFFFF"
                     }
-                }  
-                return items.length - 1 + startIndex
+                )
+                // Update selection
+                if (srcElement.className == "word" || srcElement.className == "punc" ||
+                    srcElement.className.indexOf("stage") !== -1) {
+                        newIndex = Array.from(parent.children).indexOf(srcElement)
+                        lowIndex = newIndex > startIndex ? startIndex : newIndex
+                        highIndex = newIndex > startIndex ? newIndex : startIndex
+                }
+                // Highlight and decide on cutting or uncutting
+                toCut = false
+                Array.from(parent.children).slice(lowIndex, highIndex + 1).forEach(
+                    function(element) {
+                        if (element.className == "word" || element.className == "punc" ||
+                            element.className == "stage"){
+                                element.style.backgroundColor = "#B8D7FB";
+                                if (element.dataset.cut == "false") {
+                                    toCut = true
+                                }
+                        }
+                    }
+                )
             }
+        }
 
-            // NOT CURRENTLY USED, LEFT FOR FUTURE INFO
-            function doCut(clickedItem) {
-                // act
-                if (clickedItem.getAttribute("class") == "acthead") {
-                //    if (clickedItem.tagName.toLowerCase() == "button") {
-                //
-                //        // Don't cut Acts
-                //        var entireAct = document.getElementById("Div" + clickedItem.id);
-                //        var allChildren = entireAct.getElementsByTagName("button");
-                //        if (clickedItem.dataset.cut.toLowerCase() == "false") {
-                //            for (var i = 0; i < allChildren.length; i++) {
-                //                allChildren[i].style.color = "#D3D3D3";
-                //                allChildren[i].style.textDecoration = "line-through";
-                //                allChildren[i].dataset.cut = "true";
-                //            }
-                //            //clickedItem.style.color = "#D3D3D3";
-                //            //clickedItem.style.textDecoration = "line-through";
-                //            clickedItem.dataset.cut = "true";
-                //        }
-                //        // perform uncut
-                //        else {
-                //            for (var i = 0; i < allChildren.length; i++) {
-                //                allChildren[i].style.color = "#000000";
-                //                allChildren[i].style.textDecoration = "none";
-                //                allChildren[i].dataset.cut = "false";
-                //            }
-                //            // clickedItem.style.color = "#000000";
-                //            // clickedItem.style.textDecoration = "none";
-                //            clickedItem.dataset.cut = "false";
-                //        }
-                //    }    
-                }
-                // scene
-                else if (clickedItem.getAttribute("class") == "scenehead") {
-                //    if (clickedItem.tagName.toLowerCase() == "button") {
-                //        // perform cut
-                //        var entireScene = document.getElementById("Div" + clickedItem.id);
-                //        var allChildren = entireScene.getElementsByTagName("button");
-                //        if (clickedItem.dataset.cut.toLowerCase() == "false") {
-                //            for (var i = 0; i < allChildren.length; i++) {
-                //                allChildren[i].style.color = "#D3D3D3";
-                //                allChildren[i].style.textDecoration = "line-through";
-                //                allChildren[i].dataset.cut = "true";
-                //            }
-                //            //clickedItem.style.color = "#D3D3D3";
-                //            //clickedItem.style.textDecoration = "line-through";
-                //            clickedItem.dataset.cut = "true";
-                //        }
-                //        // perform uncut
-                //        else {
-                //            for (var i = 0; i < allChildren.length; i++) {
-                //                allChildren[i].style.color = "#000000";
-                //                allChildren[i].style.textDecoration = "none";
-                //                allChildren[i].dataset.cut = "false";
-                //            }
-                //            //clickedItem.style.color = "#000000";
-                //            //clickedItem.style.textDecoration = "none";
-                //            clickedItem.dataset.cut = "false";
-                //        }
-                //    }    
-                }
-                // stage
-                else if (clickedItem.getAttribute("class") == "stage") {
-                    if (clickedItem.tagName.toLowerCase() == "button") {
-                        if (clickedItem.dataset.cut.toLowerCase() == "false") {
-                            clickedItem.style.color = "#D3D3D3";
-                            clickedItem.style.textDecoration = "line-through";
-                            clickedItem.dataset.cut = "true";
-                        }
-                        else {
-                            clickedItem.style.color = "#000000";
-                            clickedItem.style.textDecoration = "none";
-                            clickedItem.dataset.cut = "false";
-                        }
-                    }    
-                }
-                // line
-                else if (clickedItem.getAttribute("class") == "word" || clickedItem.getAttribute("class") == "punc") {
-                    if (clickedItem.tagName.toLowerCase() == "button") {
-                        if (clickedItem.dataset.cut.toLowerCase() == "false") {
-                            clickedItem.style.color = "#D3D3D3";
-                            clickedItem.style.textDecoration = "line-through";
-                            clickedItem.dataset.cut = "true";
-                        }
-                        else {
-                            clickedItem.style.color = "#000000";
-                            clickedItem.style.textDecoration = "none";
-                            clickedItem.dataset.cut = "false";
-                        }
-                    }    
+        function mouseUp({ srcElement }) {
+            if (lowIndex == highIndex) {
+                srcElement.dataset.cut == "true" ? uncut(srcElement) : cut(srcElement)
+            } else {
+                Array.from(parent.children).slice(lowIndex, highIndex + 1).forEach(
+                    function(element){
+                        toCut ? cut(element) : uncut(element)
+                    }
+                )
+            }
+            newIndex = lowIndex = highIndex = startIndex = parent = null
+            down = toCut = false
+        }
+
+        function cut(element) {
+            if (element.className == "word" || element.className == "punc" ||
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
+                    element.style.color = "#D3D3D3"
+                    element.style.textDecoration = "line-through"
+                    element.dataset.cut = "true"
+                    element.style.backgroundColor = '#FFFFFF'
+                    speakerCut = false
+            }
+        }
+
+        function uncut(element) {
+            if (element.className == "word" || element.className == "punc" ||
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
+                    element.style.color = "#000000"
+                    element.style.textDecoration = "none"
+                    element.dataset.cut = "false"
+                    element.style.backgroundColor = '#FFFFFF'
+                    speakerCut = false
+            }
+        }
+
+        function nextSpeaker(srcElement, startIndex) {
+            items = Array.from(srcElement.parentNode.children).splice(startIndex)
+            for (element of items) {
+                if (element.className == "speaker" || element.className == "stage" || element.className == "sceneDiv" || element.className == "actDiv") {
+                    return items.indexOf(element) + startIndex - 1 
                 }
             }  
-        </script>
+            return items.length - 1 + startIndex
+        }
 
-
-
-        <script>
-            /** 
-             * This controls scene buttons in the navigation bar
-             */
-            var sceneButtons = document.getElementsByClassName("nav-scene");
-            var sceneLength = sceneButtons.length;
-            for (var i = 0; i < sceneLength; i++) {
-                sceneButton = sceneButtons[i];
-                sceneButton.addEventListener("click", showScene, false);
+        // NOT CURRENTLY USED, LEFT FOR FUTURE INFO
+        function doCut(clickedItem) {
+            // act
+            if (clickedItem.getAttribute("class") == "acthead") {
+            //    if (clickedItem.tagName.toLowerCase() == "button") {
+            //
+            //        // Don't cut Acts
+            //        var entireAct = document.getElementById("Div" + clickedItem.id);
+            //        var allChildren = entireAct.getElementsByTagName("button");
+            //        if (clickedItem.dataset.cut.toLowerCase() == "false") {
+            //            for (var i = 0; i < allChildren.length; i++) {
+            //                allChildren[i].style.color = "#D3D3D3";
+            //                allChildren[i].style.textDecoration = "line-through";
+            //                allChildren[i].dataset.cut = "true";
+            //            }
+            //            //clickedItem.style.color = "#D3D3D3";
+            //            //clickedItem.style.textDecoration = "line-through";
+            //            clickedItem.dataset.cut = "true";
+            //        }
+            //        // perform uncut
+            //        else {
+            //            for (var i = 0; i < allChildren.length; i++) {
+            //                allChildren[i].style.color = "#000000";
+            //                allChildren[i].style.textDecoration = "none";
+            //                allChildren[i].dataset.cut = "false";
+            //            }
+            //            // clickedItem.style.color = "#000000";
+            //            // clickedItem.style.textDecoration = "none";
+            //            clickedItem.dataset.cut = "false";
+            //        }
+            //    }    
             }
-            function showScene(scene) {
-                var allScenes = document.getElementsByClassName("scenehead");
-                for (var i = 0; i < allScenes.length; i++) {
-                    if (("n" + allScenes[i].id) == scene.target.id) {
-                        allScenes[i].style.backgroundColor = "yellow";
-                        window.location.hash = allScenes[i].id;
+            // scene
+            else if (clickedItem.getAttribute("class") == "scenehead") {
+            //    if (clickedItem.tagName.toLowerCase() == "button") {
+            //        // perform cut
+            //        var entireScene = document.getElementById("Div" + clickedItem.id);
+            //        var allChildren = entireScene.getElementsByTagName("button");
+            //        if (clickedItem.dataset.cut.toLowerCase() == "false") {
+            //            for (var i = 0; i < allChildren.length; i++) {
+            //                allChildren[i].style.color = "#D3D3D3";
+            //                allChildren[i].style.textDecoration = "line-through";
+            //                allChildren[i].dataset.cut = "true";
+            //            }
+            //            //clickedItem.style.color = "#D3D3D3";
+            //            //clickedItem.style.textDecoration = "line-through";
+            //            clickedItem.dataset.cut = "true";
+            //        }
+            //        // perform uncut
+            //        else {
+            //            for (var i = 0; i < allChildren.length; i++) {
+            //                allChildren[i].style.color = "#000000";
+            //                allChildren[i].style.textDecoration = "none";
+            //                allChildren[i].dataset.cut = "false";
+            //            }
+            //            //clickedItem.style.color = "#000000";
+            //            //clickedItem.style.textDecoration = "none";
+            //            clickedItem.dataset.cut = "false";
+            //        }
+            //    }    
+            }
+            // stage
+            else if (clickedItem.getAttribute("class") == "stage") {
+                if (clickedItem.tagName.toLowerCase() == "button") {
+                    if (clickedItem.dataset.cut.toLowerCase() == "false") {
+                        clickedItem.style.color = "#D3D3D3";
+                        clickedItem.style.textDecoration = "line-through";
+                        clickedItem.dataset.cut = "true";
                     }
                     else {
-                        allScenes[i].style.backgroundColor = "transparent";
+                        clickedItem.style.color = "#000000";
+                        clickedItem.style.textDecoration = "none";
+                        clickedItem.dataset.cut = "false";
                     }
-                }
-                var allActs = document.getElementsByClassName("acthead");
-                for (var i = 0; i < allActs.length; i++) {
-                    allActs[i].style.backgroundColor = "transparent";
-                }
+                }    
             }
-            /** 
-             * This controls act buttons in the navigation bar
-             */
-            var actButtons = document.getElementsByClassName("nav-act");
-            var actLength = actButtons.length;
-            for (var i = 0; i < actLength; i++) {
-                actButton = actButtons[i];
-                actButton.addEventListener("click", showAct, false);
-            }
-            function showAct(act) {
-                var allActs = document.getElementsByClassName("acthead");
-                for (var i = 0; i < allActs.length; i++) {
-                    if (("n" + allActs[i].id) == act.target.id) {
-                        allActs[i].style.backgroundColor = "yellow";
-                        window.location.hash = allActs[i].id;
+            // line
+            else if (clickedItem.getAttribute("class") == "word" || clickedItem.getAttribute("class") == "punc") {
+                if (clickedItem.tagName.toLowerCase() == "button") {
+                    if (clickedItem.dataset.cut.toLowerCase() == "false") {
+                        clickedItem.style.color = "#D3D3D3";
+                        clickedItem.style.textDecoration = "line-through";
+                        clickedItem.dataset.cut = "true";
                     }
                     else {
-                        allActs[i].style.backgroundColor = "transparent";
+                        clickedItem.style.color = "#000000";
+                        clickedItem.style.textDecoration = "none";
+                        clickedItem.dataset.cut = "false";
                     }
+                }    
+            }
+        };
+    </script>
+
+
+
+    <script>
+        /** 
+         * This controls scene buttons in the navigation bar
+         */
+        var sceneButtons = document.getElementsByClassName("nav-scene");
+        var sceneLength = sceneButtons.length;
+        for (var i = 0; i < sceneLength; i++) {
+            sceneButton = sceneButtons[i];
+            sceneButton.addEventListener("click", showScene, false);
+        }
+        function showScene(scene) {
+            var allScenes = document.getElementsByClassName("scenehead");
+            for (var i = 0; i < allScenes.length; i++) {
+                if (("n" + allScenes[i].id) == scene.target.id) {
+                    allScenes[i].style.backgroundColor = "yellow";
+                    window.location.hash = allScenes[i].id;
                 }
-                var allScenes = document.getElementsByClassName("scenehead");
-                for (var i = 0; i < allScenes.length; i++) {
+                else {
                     allScenes[i].style.backgroundColor = "transparent";
                 }
             }
-            /** 
-             * This controls the synopsis button in the navigation bar.
-             */
-            var modal = document.getElementById("synopsis-modal");
-            var btn = document.getElementById("synopsis-button");
-            var span = document.getElementsByClassName("close")[0];
-            btn.onclick = function() {
-                modal.style.display = "block";
+            var allActs = document.getElementsByClassName("acthead");
+            for (var i = 0; i < allActs.length; i++) {
+                allActs[i].style.backgroundColor = "transparent";
             }
-            span.onclick = function() {
-                modal.style.display = "none";
+        }
+        /** 
+         * This controls act buttons in the navigation bar
+         */
+        var actButtons = document.getElementsByClassName("nav-act");
+        var actLength = actButtons.length;
+        for (var i = 0; i < actLength; i++) {
+            actButton = actButtons[i];
+            actButton.addEventListener("click", showAct, false);
+        }
+        function showAct(act) {
+            var allActs = document.getElementsByClassName("acthead");
+            for (var i = 0; i < allActs.length; i++) {
+                if (("n" + allActs[i].id) == act.target.id) {
+                    allActs[i].style.backgroundColor = "yellow";
+                    window.location.hash = allActs[i].id;
+                }
+                else {
+                    allActs[i].style.backgroundColor = "transparent";
+                }
             }
-            /** 
-             * This controls the analytics button in the navigation bar.
-             */
-            var modal2 = document.getElementById("analytics-modal");
-            var btn2 = document.getElementById("analytics-button");
-            var span2 = document.getElementsByClassName("close2")[0];
-            btn2.onclick = function() {
-                modal2.style.display = "block";
+            var allScenes = document.getElementsByClassName("scenehead");
+            for (var i = 0; i < allScenes.length; i++) {
+                allScenes[i].style.backgroundColor = "transparent";
             }
-            span2.onclick = function() {
+        }
+        /** 
+         * This controls the synopsis button in the navigation bar.
+         */
+        var modal = document.getElementById("synopsis-modal");
+        var btn = document.getElementById("synopsis-button");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        /** 
+         * This controls the analytics button in the navigation bar.
+         */
+        var modal2 = document.getElementById("analytics-modal");
+        var btn2 = document.getElementById("analytics-button");
+        var span2 = document.getElementsByClassName("close2")[0];
+        btn2.onclick = function() {
+            modal2.style.display = "block";
+        }
+        span2.onclick = function() {
+            modal2.style.display = "none";
+        }
+        /**
+         * This closes the modals if the user clicks outside of either 
+         * the synopsis or analytics modal.
+         */
+        window.onclick = function(event) {
+            if (event.target == modal2) {
                 modal2.style.display = "none";
             }
-            /**
-             * This closes the modals if the user clicks outside of either 
-             * the synopsis or analytics modal.
-             */
-            window.onclick = function(event) {
-                if (event.target == modal2) {
-                    modal2.style.display = "none";
-                }
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            } 
-        </script>
-
-            <form action="/plays/:save" method="post" id="saveForm">
-                <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
-                <input type="hidden" name="savedocument" value="">
-                <input type="submit" style="visibility:hidden;" name="saveButton" value="Save">    
-            </form>
-            
-        <script>
-            var saveBtn = document.getElementById("save-button")
-            saveBtn.onclick = function() {          
-                var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
-                document.getElementById("saveForm").elements["savedocument"].value = fullScript
-                document.getElementById("saveForm").elements["saveButton"].click()
-
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
+        } 
+    </script>
 
-        </script>
-    </div>
+        <form action="/plays/:save" method="post" id="saveForm">
+            <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+            <input type="hidden" name="savedocument" value="">
+            <input type="submit" style="visibility:hidden;" name="saveButton" value="Save">    
+        </form>
+            
+    <script>
+        var saveBtn = document.getElementById("save-button")
+        saveBtn.onclick = function() {          
+            var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
+            document.getElementById("saveForm").elements["savedocument"].value = fullScript
+            document.getElementById("saveForm").elements["saveButton"].click()
+
+        }
+    </script>
 
 
     <!-- 
@@ -551,7 +548,7 @@
         <% if @provideddocument != "" %>
         <script>
             //document.getElementsByClassName('script-main')[0].innerHTML = @provideddocument
-            console.log(document.getElementById('actualTextDiv').innerHTML)
+            console.log(document.getElementsByClassName('script-main')[0].innerHTML)
         </script>
         <% else %>
         
@@ -684,4 +681,5 @@
             </div>
         <% end %>
     </div>
+
 </body></html>
