@@ -5,8 +5,8 @@ class PlaysController < ApplicationController
   # POST /plays
   def save
     @data = params[:savedocument]
-    # @doctitle = params[:savetitle]
-    @string = "edited_" + "a_midsummer_nights_dream" + ".html"
+    @doctitle = params[:savetitle]
+    @string = "edited_" + @doctitle + ".html"
     File.open(@string, "w") {|f| f.write(@data)}
 
   end

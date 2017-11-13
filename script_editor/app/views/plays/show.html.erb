@@ -536,7 +536,7 @@
             var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
             var form = document.getElementById("saveForm")
             form.elements["savedocument"].value = fullScript
-            form.elements["savetitle"].value = document.getElementById('doctitle')
+            form.elements["savetitle"].value = window.location.pathname.substring(7)
             // form.elements["savetitle"].value = document.getElementById('title').innerHTML
             form.elements["saveButton"].click()
 
@@ -557,7 +557,7 @@
             </script>
         <% else %>
             <script>
-                console.log("provideddocument was equal to an empty string!!!!!")
+                console.log("provideddocument was empty")
             </script>
         
         
