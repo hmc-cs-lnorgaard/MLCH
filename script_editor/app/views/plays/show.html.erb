@@ -523,9 +523,10 @@
         } 
     </script>
 
-        <form action="/plays/:save" method="post" id="saveForm">
+        <form action="/plays/save" method="post" id="saveForm">
             <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
             <input type="hidden" name="savedocument" value="">
+            <input type="hidden" name="savetitle" value="">
             <input type="submit" style="visibility:hidden;" name="saveButton" value="Save">    
         </form>
             
@@ -533,8 +534,11 @@
         var saveBtn = document.getElementById("save-button")
         saveBtn.onclick = function() {          
             var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
-            document.getElementById("saveForm").elements["savedocument"].value = fullScript
-            document.getElementById("saveForm").elements["saveButton"].click()
+            var form = document.getElementById("saveForm")
+            form.elements["savedocument"].value = fullScript
+            form.elements["savetitle"].value = document.getElementById('doctitle')
+            // form.elements["savetitle"].value = document.getElementById('title').innerHTML
+            form.elements["saveButton"].click()
 
         }
     </script>
@@ -546,11 +550,15 @@
     <div class="script-main"> 
         
         <% if @provideddocument != "" %>
-        <script>
-            //document.getElementsByClassName('script-main')[0].innerHTML = @provideddocument
-            console.log(document.getElementsByClassName('script-main')[0].innerHTML)
-        </script>
+            <%= content_tag :div, class: "edited-script", data: {provideddocument: @provideddocument} do %>
+            <% end %>
+            <script>
+                document.getElementsByClassName('script-main')[0].innerHTML = $('.edited-script').data('provideddocument')
+            </script>
         <% else %>
+            <script>
+                console.log("provideddocument was equal to an empty string!!!!!")
+            </script>
         
         
             <% currAct = 1 %>

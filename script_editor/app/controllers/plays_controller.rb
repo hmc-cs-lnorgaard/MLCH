@@ -5,18 +5,21 @@ class PlaysController < ApplicationController
   # POST /plays
   def save
     @data = params[:savedocument]
-    File.open("testing123.txt", "w") {|f| f.write(@data)}
+    # @doctitle = params[:savetitle]
+    @string = "edited_" + "a_midsummer_nights_dream" + ".html"
+    File.open(@string, "w") {|f| f.write(@data)}
 
   end
 
   def show
     
     @doctitle = params[:play]
+    
     @string = "edited_" + @doctitle + ".html"
 
     if File.exists?(@string)
       @provideddocument = File.open(@string, "r")
-      #@provideddocument = File.read(@string)
+      @provideddocument = File.read(@string)
     else 
       @provideddocument = ""  #perhaps here we can provide the html files we already have?
       #until then we can check in the HTML if this variable is equal to "" and if so parse it there
