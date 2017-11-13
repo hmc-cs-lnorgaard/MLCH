@@ -366,7 +366,7 @@
         down = false
         toCut = false
         parent = null
-        speakerCut = true
+        speakerCut = false
 
         // all words will need to be printed within the div class "script-main"
 
@@ -447,16 +447,18 @@
                     element.dataset.cut = "true"
                     element.style.backgroundColor = '#FFFFFF'
                     speakerCut = false
+            }
         }
 
         function uncut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className.indexOf("stage") !== -1m|| (element.className == "speaker" && speakerCut == true)) {
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#000000"
                     element.style.textDecoration = "none"
                     element.dataset.cut = "false"
                     element.style.backgroundColor = '#FFFFFF'
                     speakerCut = false
+            }
         }
 
         function nextSpeaker(srcElement, startIndex) {
@@ -560,7 +562,7 @@
                     }
                 }    
             }
-        };
+        }  
     </script>
 
 
@@ -653,26 +655,19 @@
             }
         } 
     </script>
-    <form action="/plays/:save" method="post" id="saveForm">
-        <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
-        <input type="hidden" name="savedocument" value="">
-        <input type="submit" value="submit"/>
-    </form>
-      <!--   name="save-button" value="Save"> -->
-    <script>
 
-        // document.getElementById("saveForm").elements["save-button"].addEventListener("click", saveFunction, false)
-        // function saveFunction() {
+        <form action="/plays/:save" method="post" id="saveForm">
+            <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+            <input type="hidden" name="savedocument" value="">
+            <input type="submit" style="visibility:hidden;" name="saveButton" value="Save">    
+        </form>
+        
+    <script>
         var saveBtn = document.getElementById("save-button")
         saveBtn.onclick = function() {          
             var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
-            var textbox = document.createElement("full-script")
-            textbox.type = 'text'
-            textbox.value = fullScript
-
-            document.getElementById("saveForm").elements["savedocument"] = textbox.value
-
-            // document.getElementById("saveForm").submit()
+            document.getElementById("saveForm").elements["savedocument"].value = fullScript
+            document.getElementById("saveForm").elements["saveButton"].click()
 
         }
 

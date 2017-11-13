@@ -5,7 +5,7 @@ class PlaysController < ApplicationController
   # POST /plays
   def save
     @data = params[:savedocument]
-    file = File.open("testing123.txt", "w") { |f| f.write(@data) }
+    File.open("testing123.txt", "w") {|f| f.write(@data)}
 
   end
 
