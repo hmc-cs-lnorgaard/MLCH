@@ -136,7 +136,13 @@
                     var punctuation = Array.from(document.getElementsByClassName("punc"));
                     var directions = Array.from(document.getElementsByClassName("stage"));
                     var cuttableScript = words.concat(punctuation).concat(directions);
+                    var maxLine = 0
                     cuttableScript.forEach(function(word) {
+                        if (word.dataset.linenum > maxLine) //getting the number of lines in the play
+                        {
+                            maxLine = word.dataset.linenum
+                            console.log(word)
+                        }
                         if (toggleBtn.curState == "showing" && word.dataset.cut == "true") // User wishes to hide edit
                         {
                             word.style.display = 'none'
@@ -147,6 +153,18 @@
                         }
 
                     })
+                    var line47 = Array.from (document.querySelectorAll("[data-linenum = '47' ]"))
+                    line47.forEach(function(word){
+                        console.log(word)
+                    })
+
+                    for (i = i; i < maxLine; ++i)
+                    {
+                        var lineElements = Array.from(document.querySelectorAll("[data-linenum = ' " + i + " ' ]"))
+                        
+                    }
+
+
                     //Change button text from Show to Hide or vice versa 
                     if (toggleBtn.curState == "hiding")  //wish to show edits
                     {
@@ -346,7 +364,7 @@
                         <% end %>
 
                         <% # BREAK FOR NEW LINE %>
-                        <br>
+                        <br class = "newLine" data-lineNum=<%= lineNum %>  >
 
 
                         <% stages.each do |stage| %>
