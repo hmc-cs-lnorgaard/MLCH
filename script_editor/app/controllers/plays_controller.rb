@@ -11,6 +11,17 @@ class PlaysController < ApplicationController
 
   def show
     
+    @doctitle = params[:play]
+    @string = "edited_" + @doctitle + ".html"
+
+    if File.exists?(@string)
+      @provideddocument = File.open(@string, "r")
+      #@provideddocument = File.read(@string)
+    else 
+      @provideddocument = ""  #perhaps here we can provide the html files we already have?
+      #until then we can check in the HTML if this variable is equal to "" and if so parse it there
+    end
+    
     # These variables will change as we parse through the play
     #theSynopsis = doc.css('//div[type="synopsis"]').text
     #currentPlay = doc.css('//titleStmt/title').inner_text
