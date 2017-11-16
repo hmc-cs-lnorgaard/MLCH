@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html manifest="MND.appcache"><body>
+<html><body>
     <p id="notice"></p>
 
     <!-- 
@@ -129,7 +129,7 @@
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> Hide Edits </button>
 
             <!--
-                This script tag creates a button which will hide the edits made by the use to create
+                This script tag creates a button which will hide the edits made by the user to create
                 a concise and readable version of the script. It collects a list of all cuttable items from the document body by class name and loops through this list, checking for the state of the toggle button and if the text has been cut, and switching the display of the text accordingly. While this is a large set to loop over, it takes a minute amount of time to do.
             -->
             <script>
@@ -404,9 +404,6 @@
                     toCut = true
                 }
                 speakerCut = true
-
-                console.log('low index is ', lowIndex)
-                console.log('high index is ', highIndex)
             }
         }
 
@@ -421,7 +418,7 @@
                 )
                 // Update selection
                 if (srcElement.className == "word" || srcElement.className == "punc" ||
-                    srcElement.className.indexOf("stage") !== -1) {
+                    srcElement.className.includes("stage")) {
                         newIndex = Array.from(parent.children).indexOf(srcElement)
                         lowIndex = newIndex > startIndex ? startIndex : newIndex
                         highIndex = newIndex > startIndex ? newIndex : startIndex
@@ -460,7 +457,7 @@
         //next 2 functions actually change the styling of the items
         function cut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
+                element.className.includes("stage") || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#D3D3D3"
                     element.style.textDecoration = "line-through"
                     element.dataset.cut = "true"
@@ -471,7 +468,7 @@
 
         function uncut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
+                element.className.includes("stage") || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#000000"
                     element.style.textDecoration = "none"
                     element.dataset.cut = "false"
