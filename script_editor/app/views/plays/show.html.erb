@@ -1,12 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html><body>
+<html manifest="MND.appcache"><body>
     <p id="notice"></p>
 
-    <!-- 
-        Decide what XML file to open depending on the URL.
-        We did them one-by-one because the URL's didn't match
-        Folger Digital Text's file-naming scheme. 
-    -->
+    <%
+        #Decide what XML file to open depending on the URL.
+        #We did them one-by-one because the URL's didn't match
+        #Folger Digital Text's file-naming scheme. 
+    %>
     <% doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/MND.xml"))
     if "#{request.fullpath}" == "/plays/a_midsummer_nights_dream"
         doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/MND.xml"))
@@ -95,9 +95,9 @@
     end %>
 
 
-    <!-- 
-        Get title of play and display at top of page 
-    -->
+    <% 
+        # Get title of play and display at top of page 
+    %>
     <div class="script-title">
         <div id="Home-button">
             <a id="home" href="/">Home</a>
@@ -112,10 +112,10 @@
     </div>
 
 
-    <!-- 
-        Parse the XML file for number of acts & scenes in order to 
-        create the navigation bar 
-    -->
+    <% 
+        #Parse the XML file for number of acts & scenes in order to 
+        #create the navigation bar 
+    %>
     <div class="script-side-bar">
         <div class="play-navigation">
 
@@ -129,7 +129,7 @@
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> Hide Edits </button>
 
             <!--
-                This script tag creates a button which will hide the edits made by the user to create
+                This script tag creates a button which will hide the edits made by the use to create
                 a concise and readable version of the script. It collects a list of all cuttable items from the document body by class name and loops through this list, checking for the state of the toggle button and if the text has been cut, and switching the display of the text accordingly. While this is a large set to loop over, it takes a minute amount of time to do.
             -->
             <script>
@@ -171,7 +171,7 @@
              </script>
              <div class = "break"> </div>
 
-            <!-- Create a button for each act and scene in the play -->
+            <% # Create a button for each act and scene in the play %>
             <% currAct = 1 %>
             <% currScene = 1 %>
             <% currIndex = 1 %>
@@ -219,17 +219,13 @@
         <div class="modal-content">
             <span class="close2">&times;</span>
             <div class="hidden-analytics" id="hidden-analytics"></div>
-            <% analyticstext = "Total Lines: ????" %>
-            <script>
-                document.getElementById('hidden-analytics').innerHTML = '<%= escape_javascript analyticstext %>';
-            </script>
         </div>
     </div>
 
 
-    <!-- 
-        Parse the XML file for the actual script, and display everything 
-    -->
+    <% 
+        #Parse the XML file for the actual script, and display everything 
+    %>
     <div class="script-main"> 
         <% currAct = 1 %>
         <% currScene = 1 %>
@@ -238,7 +234,11 @@
         <% acts= doc.css('//div1') %>
         <% acts.each do |act| %>
             <% if Nokogiri::XML(act.to_s).css('head').first != nil %>
-            <div class="actDiv" id="Diva"><button class="acthead" id="current-act" data-cut="false" data-display="true"> <%= Nokogiri::XML(act.to_s).css('head').first.inner_text %></button><br></b>
+            <div class="actDiv" id="Diva">
+                <button class="acthead" id="current-act" data-cut="false" data-display="true">
+                    <%= Nokogiri::XML(act.to_s).css('head').first.inner_text %>
+                </button>
+                <br/>
             <% end %>
             <script>
                 document.getElementById('current-act').id = '<%= escape_javascript "a" + currAct.to_s %>';
@@ -249,7 +249,11 @@
             <% currScene = 1 %>
             <% scenes.each do |scene| %>
                 <% if Nokogiri::XML(scene.to_s).css('head').first != nil %>
-                <div class="sceneDiv" id="Divs"><button class="scenehead" id="current-scene" data-cut="false" data-display="true"><%= Nokogiri::XML(scene.to_s).css('head').first.inner_text %></button><br>
+                    <div class="sceneDiv" id="Divs">
+                        <button class="scenehead" id="current-scene" data-cut="false" data-display="true">
+                            <%= Nokogiri::XML(scene.to_s).css('head').first.inner_text %>
+                        </button>
+                        <br>
                 <% end %>
                 <script>
                     document.getElementById('current-scene').id = '<%= escape_javascript "s" + currIndex.to_s %>';
@@ -261,79 +265,95 @@
                 <% lines = Nokogiri::XML(scene.to_s).css('//sp') %>
                 <% stages = Nokogiri::XML(scene.to_s).css('stage').to_a %>
 
+
                 <% lines.each do |line| %>
-                <!-- DISPLAY STAGE DIRECTIONS -->
-                    <!-- Get line id -->
+                    <% #DISPLAY STAGE DIRECTIONS %>
+                    <% #Get line id %>
                     <% lineN = line.attr("xml:id").to_s.gsub("sp-","").to_f %>
 
                     <% stages.each do |stage| %>
-                        <!-- Get stage direction id -->
+                        <% #Get stage direction id %>
                         <% stageN = stage.attr('xml:id').to_s.gsub("stg-","").to_f %>
-                        <!-- If there is a stage dir that comes before the line -->
+                        <% #If there is a stage dir that comes before the line %>
                         <% if (stageN < lineN) and (stageN >= lineN-1.0)%>
-                            <!-- display stage direction -->
+                            <% #display stage direction %>
                             <br>
-                            <button class="stage" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
+                            <button class="stage" data-cut="false" data-display="true">
+                                <%= stage.inner_text %>
+                            </button>
+                            <br>
                             <% stages.delete(stage) %>
                         <% end %>
                     <% end %>
 
-                    <!-- Getting all the info needed for each line -->
+                    <% # getting all the info needed for each line %>
                     <% speaker = Nokogiri::XML(line.to_s).css('speaker') %>
                     <% milestones = Nokogiri::XML(line.to_s).css('milestone') %>
                     <% spwords = Nokogiri::XML(line.to_s).css('w','c','pc') %>
 
-                    <!-- DISPLAY SPEAKER -->
-                    <br><p class="speaker"><%=speaker.inner_text%> </p><br>
-
-                    <!-- DISPLAY LINES -->
+                    <% # DISPLAY SPEAKER %>
+                    <br>
+                    <p class="speaker">
+                        <%=speaker.inner_text%>
+                    </p>
+                    <br>
+                    <% # DISPLAY LINES %>
                     <% milestones.each do |ms| %>
 
                         <% msN = ms.attr("xml:id").to_s.gsub("ftln-","").to_f %>
                         <% stages.each do |stage| %>
-                            <!-- Get stage direction id -->
+                            <% # Get stage direction id %>
                             <% stageN = stage.attr('xml:id').to_s.gsub("stg-","").to_f %>
-                            <!-- If there is a stage dir inside speech -->
+                            <% # If there is a stage dir inside speech %>
                             <% if (stageN <= msN) and (stageN >= msN-1.0) %>
+
                             <!-- display stage direction  -->
                             <!-- add a special class marker to this direction showing it is inside a speech.
                                 this enables the direction to be cut when a whole speech is cut by clicking on the 
                                 character name -->
                                 <button class="stage inside" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
+
                                 <% stages.delete(stage) %>
                             <% end %>
                         <% end %>
 
-                        <!-- get line number -->
+                        <% # get line number %>
                         <% lineNum = ms.attr("n").to_s.split(".")[2] %>
-                        <!-- get corresps per milestone in array -->
+                        <% # get corresps per milestone in array %>
                         <% wordIDs = ms.attr("corresp").to_s.split(" ") %>
-                        <!-- remove #s -->
+                        <% # remove #s %>
                         <% wordIDs = wordIDs.map { |w| w.gsub("#","")} %>
-                        <!-- Search spwords for corresponding w/c/pc -->
+                        <% # Search spwords for corresponding w/c/pc %>
                         
-                        <!-- DISPLAY LINE NUMBER -->
+                        <% # DISPLAY LINE NUMBER %>
                         <% if lineNum.to_i % 5 == 0 %>
-                            <p class="lineNum"><%= lineNum %></p>
+                            <p class="lineNum">
+                                <%= lineNum %>
+                            </p>
                         <% end %>
 
                         <% wordIDs.each do |id| %>
                             <% spwords.each do |word| %>
                                 <% if word.attr('xml:id').to_s == id %>
-                                <!-- DISPLAY EACH WORD -->
-                                <% if (word.inner_text == ".") || (word.inner_text == ",") || (word.inner_text == "?") || (word.inner_text == "!") || (word.inner_text == ";") || (word.inner_text == ":") %>
-                                    <button class="punc" data-cut="false" data-display="true"><%= word.inner_text %></button>
-                                <% else %>
-                                    <% if word.inner_text != "" && word.inner_text != " " %>
-                                        <button class="word" data-cut="false" data-display="true"><%= word.inner_text %></button>
+                                    <% # DISPLAY EACH WORD %>
+                                    <% if (word.inner_text == ".") || (word.inner_text == ",") || (word.inner_text == "?") || (word.inner_text == "!") || (word.inner_text == ";") || (word.inner_text == ":") %>
+                                        <button class="punc" data-cut="false" data-display="true" data-lineNum=<%= lineNum %>>
+                                            <%= word.inner_text %>
+                                        </button>
+                                    <% else %>
+                                        <% if word.inner_text != "" && word.inner_text != " " %>
+                                            <button class="word" data-cut="false" data-display="true" data-lineNum=<%= lineNum %>>
+                                                <%= word.inner_text %>
+                                            </button>
+                                        <% end %>
                                     <% end %>
                                 <% end %>
                             <% end %>
                         <% end %>
-                    <% end %>
 
-                    <!-- BREAK FOR NEW LINE -->
-                    <br>
+                        <% # BREAK FOR NEW LINE %>
+                        <br>
+
 
 
                     <% stages.each do |stage| %>
@@ -347,15 +367,18 @@
                                 character name -->
                             <button class="stage inside" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
                             <% stages.delete(stage) %>
-                        <% end %>
-                    <% end %>
 
-                <% end %>
+                        <% end %>
+
+                    <% end %>
                 <% end %>
                 
                 <br>
                 <% stages.each do |stage| %>
-                    <button class="stage" data-cut="false" data-display="true"><%= stage.inner_text %></button> <br>
+                    <button class="stage" data-cut="false" data-display="true">
+                        <%= stage.inner_text %>
+                    </button>
+                    <br>
                     <% stages.delete(stage) %>
                 <% end %>
             <% end%>
@@ -404,6 +427,9 @@
                     toCut = true
                 }
                 speakerCut = true
+
+                console.log('low index is ', lowIndex)
+                console.log('high index is ', highIndex)
             }
         }
 
@@ -418,7 +444,7 @@
                 )
                 // Update selection
                 if (srcElement.className == "word" || srcElement.className == "punc" ||
-                    srcElement.className.includes("stage")) {
+                    srcElement.className.indexOf("stage") !== -1) {
                         newIndex = Array.from(parent.children).indexOf(srcElement)
                         lowIndex = newIndex > startIndex ? startIndex : newIndex
                         highIndex = newIndex > startIndex ? newIndex : startIndex
@@ -457,7 +483,7 @@
         //next 2 functions actually change the styling of the items
         function cut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className.includes("stage") || (element.className == "speaker" && speakerCut == true)) {
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#D3D3D3"
                     element.style.textDecoration = "line-through"
                     element.dataset.cut = "true"
@@ -468,7 +494,7 @@
 
         function uncut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className.includes("stage") || (element.className == "speaker" && speakerCut == true)) {
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#000000"
                     element.style.textDecoration = "none"
                     element.dataset.cut = "false"
@@ -647,6 +673,17 @@
         span.onclick = function() {
             modal.style.display = "none";
         }
+
+        // Modified from MDN for set unions
+        // This isn't used after optimization, but could be useful later
+        union = function(setA, setB) {
+            var union = new Set(setA);
+            for (var elem of setB) {
+                union.add(elem);
+            }
+            return union;
+        }
+
         /** 
          * This controls the analytics button in the navigation bar.
          */
@@ -655,7 +692,96 @@
         var span2 = document.getElementsByClassName("close2")[0];
         btn2.onclick = function() {
             modal2.style.display = "block";
+            script = document.querySelector(".script-main");
+            scenes = getScenes(script);
+            analytics = countAnalytics(scenes);
+            formatAnalytics(analytics);
         }
+
+        formatAnalytics = function(analytics) {
+            // setup
+            innerHTML = `<p class="analytic"><span class="original">Original</span><span class="concise">Concise</span></p>`;
+            // total lines
+            innerHTML += `<p class="analytic"><span class="original">Lines: ${analytics.lines.size}</span><span class="concise">Concise Lines: ${analytics.uncutLines.size}</span></p>`
+            // character lines
+            for (character in analytics.characterLines) {
+                innerHTML += `<p class="analytic"><span class="original">${character}: ${characterLines[character].total.size}</span><span class="concise">${character}: ${characterLines[character].uncut.size}</span></p>`
+            }
+            document.getElementById('hidden-analytics').innerHTML = innerHTML;
+        }
+
+        getScenes = function (script) {
+            actsAndScenes = new Set(Array.from(script.getElementsByClassName('actDiv')));
+            scenes = new Set();
+            // begin searching
+            let searching = true;
+            while(searching) {
+                searching = false;
+                // Prevents researching
+                newSet = new Set(Array.from(actsAndScenes.values()));
+                actsAndScenes.forEach(
+                    function(actOrScene) {
+                        Array.from(actOrScene.children).forEach(
+                            function(child) {
+                                if (child.className == 'actDiv') {
+                                    // these ifs are for searching, not the sets
+                                    if (!actsAndScenes.has(child)) {
+                                        newSet.add(child)
+                                        searching = true
+                                    }
+                                }
+                                if (child.className == 'sceneDiv') {
+                                    // these ifs are for searching, not the sets
+                                    if (!scenes.has(child)) {
+                                        newSet.add(child)
+                                        scenes.add(child)
+                                        searching = true
+                                    }
+                                }
+                            }
+                        )
+                        // avoid researching
+                        newSet.delete(actOrScene)
+                    }
+                )
+                actsAndScenes = newSet
+            }
+            return scenes
+        }
+
+        countAnalytics = function (scenes) {
+            lines = new Set()
+            uncutLines = new Set()
+            characterLines = {}
+            curChar = null
+            lineOffset = lineNum = 0
+            scenes.forEach(
+                function(scene){
+                    lineOffset += lineNum
+                    Array.from(scene.children).forEach(
+                        function(child) {
+                            if (child.className == 'speaker') {
+                                curChar = child.innerText
+                            }
+                            if (child.dataset.linenum) {
+                                lineNum = parseInt(child.dataset.linenum)
+                                lines.add(lineOffset + lineNum)
+                                if (!(Object.keys(characterLines).includes(curChar))) {
+                                    characterLines[curChar] = { total: new Set(), uncut: new Set() }
+                                }
+                                characterLines[curChar].total.add(lineOffset + lineNum)
+                                if (child.dataset.cut == "false") {
+                                    uncutLines.add(lineOffset + lineNum)
+                                    characterLines[curChar].uncut.add(lineOffset + lineNum)
+                                }
+                            }
+                        }
+                    )
+                }
+            )
+            return { lines: lines, uncutLines: uncutLines, characterLines: characterLines }
+        }
+
         span2.onclick = function() {
             modal2.style.display = "none";
         }
