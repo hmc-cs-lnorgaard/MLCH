@@ -180,7 +180,6 @@
                                 doCut = false // we don't want to cut the linebreak at the end of the line
                             }
                         }
-
                         //Decides what to do once you're at a lineBreak
                         if (doCut && toggleBtn.curState == "showing") //User wishes to hide edits 
                         {
@@ -189,25 +188,22 @@
                         else
                         {
                             elements[index].style.display = 'initial'
-
-                            //Create a new line number to display 
-                            var newNode = document.createElement("p")
-                            newNode.className = 'lineNum'
-                            newNode.id = "newLineNum"
-
-                            var newContent = document.createTextNode(newLineNum.toString())
-                            newNode.appendChild(newContent)
-                            if (newLineNum % 5 != 0) //we only wish to display every 5 line numbers 
+                            if (newLineNum % 5 == 0) //we only wish to display every 5 lines 
                             {
-                                newNode.style.display = 'none'
+                                //Create a new line number to display 
+                                var newNode = document.createElement("p")
+                                newNode.className = 'lineNum'
+                                newNode.id = "newLineNum"
+                                var newContent = document.createTextNode(newLineNum.toString())
+                                newNode.appendChild(newContent)
+                                elements[index].parentNode.insertBefore(newNode , elements[firstLineElm])
                             }
-                            elements[index].parentNode.insertBefore(newNode , elements[firstLineElm])
                             ++newLineNum
                         }
-                       if (index + 1 != elements.length && elements[index].parentNode != elements[index + 1].parentNode) //The elements are in different scenes or acts 
-                       {
+                        if (index + 1 != elements.length && elements[index].parentNode != elements[index + 1].parentNode) //The elements are in different scenes or acts 
+                        {
                             newLineNum = 1
-                       }
+                        }
                         ++index
                     }
                 }                    
