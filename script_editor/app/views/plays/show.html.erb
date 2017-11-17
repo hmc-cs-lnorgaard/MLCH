@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html><body>
+<html manifest="MND.appcache"><body>
     <p id="notice"></p>
 
     <%
@@ -128,14 +128,28 @@
             <!-- This button toggles the strikethrough edits' visibility -->
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> Hide Edits </button>
 
+
+            <!--
+                This script tag creates a button which will hide the edits made by the use to create
+                a concise and readable version of the script. 
+            -->
             <script>
                 var toggleBtn = document.getElementById("viewToggle-button");
                 toggleBtn.curState = "showing";
                 toggleBtn.onclick = function() {
+                    toggleScript()
+                    formatPage()
+                    adjustLines()
+                    buttonChange()
+                }
+
+                //toggleScript determines which elements of the scipt are cut and whether or not we wish to display those elements 
+                function toggleScript() { 
                     var words = Array.from(document.getElementsByClassName("word"));
                     var punctuation = Array.from(document.getElementsByClassName("punc"));
                     var directions = Array.from(document.getElementsByClassName("stage"));
-                    var cuttableScript = words.concat(punctuation).concat(directions);
+                    var speakers = Array.from(document.getElementsByClassName("speaker"))
+                    var cuttableScript = words.concat(punctuation).concat(directions).concat(speakers);
                     cuttableScript.forEach(function(word) {
                         if (toggleBtn.curState == "showing" && word.dataset.cut == "true") // User wishes to hide edit
                         {
@@ -147,7 +161,83 @@
                         }
 
                     })
-                    //Change button text from Show to Hide or vice versa 
+                }
+
+                //formatPage handles adjusting the look of the script when switching between concise and full views
+                function formatPage(){
+                    script = document.querySelector(".script-main");
+                    var elements = script.querySelectorAll("[data-linenum]")
+                    var index = 0
+                    var newLineNum = 1
+                    while (index < elements.length)
+                    {
+                        var doCut = true
+                        var firstLineElm = index
+                        //Iterates through each line until a line break
+                        while(elements[index].className != "newLine")
+                        {
+                            ++index
+                            if (elements[index].dataset.cut == "false")
+                            {
+                                doCut = false // we don't want to cut the linebreak at the end of the line
+                            }
+                        }
+                        //Decides what to do once you're at a lineBreak
+                        if (doCut && toggleBtn.curState == "showing") //User wishes to hide edits 
+                        {
+                            elements[index].style.display = 'none'
+                        }
+                        else
+                        {
+                            elements[index].style.display = 'initial'
+                            if (newLineNum % 5 == 0) //we only wish to display every 5 lines 
+                            {
+                                //Create a new line number to display 
+                                var newNode = document.createElement("p")
+                                newNode.className = 'lineNum'
+                                newNode.id = "newLineNum"
+                                var newContent = document.createTextNode(newLineNum.toString())
+                                newNode.appendChild(newContent)
+                                elements[index].parentNode.insertBefore(newNode , elements[firstLineElm])
+                            }
+                            ++newLineNum
+                        }
+                        if (index + 1 != elements.length && elements[index].parentNode != elements[index + 1].parentNode) //The elements are in different scenes or acts 
+                        {
+                            newLineNum = 1
+                        }
+                        ++index
+                    }
+                }                    
+
+                //adjustLines alters the line numbers dynamically as the user cuts lines out of the play 
+                function adjustLines() {
+                    var originalLineNums = Array.from(document.querySelectorAll("[id = 'originalLineNum']"))
+                    var newLineNums = Array.from(document.querySelectorAll("[id = 'newLineNum']"))
+
+                    originalLineNums.forEach(function(lineNumber)
+                    {
+                        if (toggleBtn.curState == "showing") //wish to hide edits
+                        {
+                            lineNumber.style.display = 'none'
+                        }
+                        else //wish to show edits 
+                        {
+                            lineNumber.style.display = 'initial'
+                        }
+                    })   
+
+                    newLineNums.forEach(function(lineNumber)
+                    {
+                        if (toggleBtn.curState == 'hiding') //wish to show edits
+                        {
+                            lineNumber.remove()
+                        }
+                    })                 
+                }              
+                   
+                //buttonChange handles the logic as to whether the button is used for showing or hiding edits 
+                function buttonChange() {
                     if (toggleBtn.curState == "hiding")  //wish to show edits
                     {
                         toggleBtn.curState = "showing"
@@ -160,7 +250,6 @@
                     }
                     else 
                     {
-
                         throw new Error('Something is fucked up with the toggle button curState')
                     }
                 }
@@ -302,11 +391,13 @@
                             <% stageN = stage.attr('xml:id').to_s.gsub("stg-","").to_f %>
                             <% # If there is a stage dir inside speech %>
                             <% if (stageN <= msN) and (stageN >= msN-1.0) %>
-                            <% # display stage direction %>
-                                <button class="stage" data-cut="false" data-display="true">
-                                    <%= stage.inner_text %>
-                                </button>
-                                <br>
+
+                            <!-- display stage direction  -->
+                            <!-- add a special class marker to this direction showing it is inside a speech.
+                                this enables the direction to be cut when a whole speech is cut by clicking on the 
+                                character name -->
+                                <button class="stage inside" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
+
                                 <% stages.delete(stage) %>
                             <% end %>
                         <% end %>
@@ -321,7 +412,7 @@
                         
                         <% # DISPLAY LINE NUMBER %>
                         <% if lineNum.to_i % 5 == 0 %>
-                            <p class="lineNum">
+                            <p class="lineNum" id = "originalLineNum">
                                 <%= lineNum %>
                             </p>
                         <% end %>
@@ -346,21 +437,22 @@
                         <% end %>
 
                         <% # BREAK FOR NEW LINE %>
-                        <br>
+                        <br class = "newLine" data-lineNum=<%= lineNum %>  >
 
 
-                        <% stages.each do |stage| %>
-                            <% # Get stage direction id %>
-                            <% stageN = stage.attr('xml:id').to_s.gsub("stg-","").to_f %>
-                            <% # If there is a stage dir inside speech %>
-                            <% if (stageN >= msN) and (stageN < msN+1.0) %>
-                                <% # display stage direction %>
-                                <button class="stage" data-cut="false" data-display="true">
-                                    <%= stage.inner_text %>
-                                </button>
-                                <br>
-                                <% stages.delete(stage) %>
-                            <% end %>
+
+                    <% stages.each do |stage| %>
+                        <!-- Get stage direction id -->
+                        <% stageN = stage.attr('xml:id').to_s.gsub("stg-","").to_f %>
+                        <!-- If there is a stage dir inside speech -->
+                        <% if (stageN >= msN) and (stageN < msN+1.0) %>
+                            <!-- display stage direction -->
+                            <!-- add a special class marker to this direction showing it is inside a speech.
+                                this enables the direction to be cut when a whole speech is cut by clicking on the 
+                                character name -->
+                            <button class="stage inside" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
+                            <% stages.delete(stage) %>
+
                         <% end %>
 
                     <% end %>
@@ -383,15 +475,21 @@
 
     <script>
 
+        //create the event listeners for a user highlighting over text to be cut
         document.querySelector(".script-main").addEventListener("mousedown", mouseDown, false);
         document.querySelector(".script-main").addEventListener("mouseover", mouseOver, false);
         document.querySelector(".script-main").addEventListener("mouseup", mouseUp, false);
 
-        down = false
-        toCut = false
-        parent = null
+
+        down = false //represents if the mouse is down
+        toCut = false //represents whether the text is to be cut or not
+        parent = null //represents the parent node of the cut items
+        speakerCut = true //version of toCut for cutting whole speeches when a character name is clicked
+
         // all words will need to be printed within the div class "script-main"
 
+        //function which takes in the clicked element and if it is a cuttable item, records the parent element 
+        //as well as the index of it's position as a child element
         function mouseDown({ srcElement }) {
             if (srcElement.className == "word" || srcElement.className == "punc" ||
                 srcElement.className == "stage") {
@@ -399,10 +497,28 @@
                     startIndex = lowIndex = highIndex = Array.from(parent.children)
                                                              .indexOf(srcElement)
                     down = true
-                    toCut = !(srcElement.dataset.cut.to_b)
+                    toCut = !(srcElement.dataset.cut.to_b)//this line currently doesn't do anything bc to_b doesnt work
+            }
+            else if (srcElement.className == "speaker") {
+                parent = srcElement.parentNode
+                lowIndex = Array.from(parent.children).indexOf(srcElement)
+                highIndex = nextSpeaker(srcElement, lowIndex + 2) //when cutting a whole speech, need the index of the
+                //next speech rather than the location of the mouseup
+
+                if (srcElement.dataset.cut == "true") {
+                    toCut = false
+                }
+                else {
+                    toCut = true
+                }
+                speakerCut = true
+
+                console.log('low index is ', lowIndex)
+                console.log('high index is ', highIndex)
             }
         }
 
+        //function to keep track of what has been highlighted to cut
         function mouseOver({ srcElement }) {
             if (down) {
                 // Clear previous highlighting
@@ -413,7 +529,7 @@
                 )
                 // Update selection
                 if (srcElement.className == "word" || srcElement.className == "punc" ||
-                    srcElement.className == "stage") {
+                    srcElement.className.indexOf("stage") !== -1) {
                         newIndex = Array.from(parent.children).indexOf(srcElement)
                         lowIndex = newIndex > startIndex ? startIndex : newIndex
                         highIndex = newIndex > startIndex ? newIndex : startIndex
@@ -425,7 +541,7 @@
                         if (element.className == "word" || element.className == "punc" ||
                             element.className == "stage"){
                                 element.style.backgroundColor = "#B8D7FB";
-                                if (element.dataset.cut == "false") {
+                                if (element.dataset.cut == "false") { //prioritize cutting over uncutting
                                     toCut = true
                                 }
                         }
@@ -434,6 +550,7 @@
             }
         }
 
+        //function to cut or uncut all the highlighted items
         function mouseUp({ srcElement }) {
             if (lowIndex == highIndex) {
                 srcElement.dataset.cut == "true" ? uncut(srcElement) : cut(srcElement)
@@ -448,24 +565,38 @@
             down = toCut = false
         }
 
+        //next 2 functions actually change the styling of the items
         function cut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className == "stage") {
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#D3D3D3"
                     element.style.textDecoration = "line-through"
                     element.dataset.cut = "true"
                     element.style.backgroundColor = '#FFFFFF'
+                    speakerCut = false
             }
         }
 
         function uncut(element) {
             if (element.className == "word" || element.className == "punc" ||
-                element.className == "stage") {
+                element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
                     element.style.color = "#000000"
                     element.style.textDecoration = "none"
                     element.dataset.cut = "false"
                     element.style.backgroundColor = '#FFFFFF'
+                    speakerCut = false
             }
+        }
+
+        //obtains the index of the next speech, act, or scene which ends the speech to be cut
+        function nextSpeaker(srcElement, startIndex) {
+            items = Array.from(srcElement.parentNode.children).splice(startIndex)
+            for (element of items) {
+                if (element.className == "speaker" || element.className == "stage" || element.className == "sceneDiv" || element.className == "actDiv") {
+                    return items.indexOf(element) + startIndex - 1 
+                }
+            }  
+            return items.length - 1 + startIndex //if we hit the very end of the play
         }
 
         // NOT CURRENTLY USED, LEFT FOR FUTURE INFO
