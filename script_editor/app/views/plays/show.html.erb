@@ -361,7 +361,7 @@
                             </button>
                             <br>
                     <% end %>
-                    <!-- Consider this comment the actDiv start (cause of the if above) -->
+                    <!-- Consider this comment the sceneDiv start (cause of the if above) -->
                         <script>
                             document.getElementById('current-scene').id = '<%= escape_javascript "s" + currIndex.to_s %>';
                             document.getElementById('Divs').id = '<%= escape_javascript "Divs" + currIndex.to_s%>';
@@ -446,7 +446,7 @@
                                     <% spwords.each do |word| %>
                                         <% if word.attr('xml:id').to_s == id %>
                                             <% # DISPLAY EACH WORD %>
-                                            <% if (word.inner_text == ".") || (word.inner_text == ",") || (word.inner_text == "?") || (word.inner_text == "!") || (word.inner_text == ";") || (word.inner_text == ":") %>
+                                            <% if (".,?;!:".include?(word.inner_text)) %>
                                                 <button class="punc" data-cut="false" data-display="true" data-lineNum=<%= lineNum %>>
                                                     <%= word.inner_text %>
                                                 </button>
