@@ -1,5 +1,4 @@
 require 'nokogiri'
-require "create_scripts"
 
 class PlaysController < ApplicationController
   

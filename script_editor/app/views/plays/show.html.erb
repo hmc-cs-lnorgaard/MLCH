@@ -538,7 +538,9 @@ require "create_scripts"
             var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
             var form = document.getElementById("saveForm")
             form.elements["savedocument"].value = fullScript
-            form.elements["savetitle"].value = window.location.pathname.substring(7)
+            url = window.location.href
+            playName = /^http:\/\/localhost:3000\/plays\/(\w*)(?:#[s,a][\d]+)?$/.exec(url)[1]
+            form.elements["savetitle"].value = playName
             // form.elements["savetitle"].value = document.getElementById('title').innerHTML
             form.elements["saveButton"].click()
 
