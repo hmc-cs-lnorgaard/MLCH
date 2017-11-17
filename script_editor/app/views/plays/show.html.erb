@@ -128,18 +128,28 @@
             <!-- This button toggles the strikethrough edits' visibility -->
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> Hide Edits </button>
 
+
             <!--
                 This script tag creates a button which will hide the edits made by the use to create
-                a concise and readable version of the script. It collects a list of all cuttable items from the document body by class name and loops through this list, checking for the state of the toggle button and if the text has been cut, and switching the display of the text accordingly. While this is a large set to loop over, it takes a minute amount of time to do.
+                a concise and readable version of the script. 
             -->
             <script>
                 var toggleBtn = document.getElementById("viewToggle-button");
                 toggleBtn.curState = "showing";
                 toggleBtn.onclick = function() {
+                    toggleScript()
+                    formatPage()
+                    adjustLines()
+                    buttonChange()
+                }
+
+                //toggleScript determines which elements of the scipt are cut and whether or not we wish to display those elements 
+                function toggleScript() { 
                     var words = Array.from(document.getElementsByClassName("word"));
                     var punctuation = Array.from(document.getElementsByClassName("punc"));
                     var directions = Array.from(document.getElementsByClassName("stage"));
-                    var cuttableScript = words.concat(punctuation).concat(directions);
+                    var speakers = Array.from(document.getElementsByClassName("speaker"))
+                    var cuttableScript = words.concat(punctuation).concat(directions).concat(speakers);
                     cuttableScript.forEach(function(word) {
                         if (toggleBtn.curState == "showing" && word.dataset.cut == "true") // User wishes to hide edit
                         {
@@ -151,7 +161,83 @@
                         }
 
                     })
-                    //Change button text from Show to Hide or vice versa 
+                }
+
+                //formatPage handles adjusting the look of the script when switching between concise and full views
+                function formatPage(){
+                    script = document.querySelector(".script-main");
+                    var elements = script.querySelectorAll("[data-linenum]")
+                    var index = 0
+                    var newLineNum = 1
+                    while (index < elements.length)
+                    {
+                        var doCut = true
+                        var firstLineElm = index
+                        //Iterates through each line until a line break
+                        while(elements[index].className != "newLine")
+                        {
+                            ++index
+                            if (elements[index].dataset.cut == "false")
+                            {
+                                doCut = false // we don't want to cut the linebreak at the end of the line
+                            }
+                        }
+                        //Decides what to do once you're at a lineBreak
+                        if (doCut && toggleBtn.curState == "showing") //User wishes to hide edits 
+                        {
+                            elements[index].style.display = 'none'
+                        }
+                        else
+                        {
+                            elements[index].style.display = 'initial'
+                            if (newLineNum % 5 == 0) //we only wish to display every 5 lines 
+                            {
+                                //Create a new line number to display 
+                                var newNode = document.createElement("p")
+                                newNode.className = 'lineNum'
+                                newNode.id = "newLineNum"
+                                var newContent = document.createTextNode(newLineNum.toString())
+                                newNode.appendChild(newContent)
+                                elements[index].parentNode.insertBefore(newNode , elements[firstLineElm])
+                            }
+                            ++newLineNum
+                        }
+                        if (index + 1 != elements.length && elements[index].parentNode != elements[index + 1].parentNode) //The elements are in different scenes or acts 
+                        {
+                            newLineNum = 1
+                        }
+                        ++index
+                    }
+                }                    
+
+                //adjustLines alters the line numbers dynamically as the user cuts lines out of the play 
+                function adjustLines() {
+                    var originalLineNums = Array.from(document.querySelectorAll("[id = 'originalLineNum']"))
+                    var newLineNums = Array.from(document.querySelectorAll("[id = 'newLineNum']"))
+
+                    originalLineNums.forEach(function(lineNumber)
+                    {
+                        if (toggleBtn.curState == "showing") //wish to hide edits
+                        {
+                            lineNumber.style.display = 'none'
+                        }
+                        else //wish to show edits 
+                        {
+                            lineNumber.style.display = 'initial'
+                        }
+                    })   
+
+                    newLineNums.forEach(function(lineNumber)
+                    {
+                        if (toggleBtn.curState == 'hiding') //wish to show edits
+                        {
+                            lineNumber.remove()
+                        }
+                    })                 
+                }              
+                   
+                //buttonChange handles the logic as to whether the button is used for showing or hiding edits 
+                function buttonChange() {
                     if (toggleBtn.curState == "hiding")  //wish to show edits
                     {
                         toggleBtn.curState = "showing"
@@ -164,7 +250,6 @@
                     }
                     else 
                     {
-
                         throw new Error('Something is fucked up with the toggle button curState')
                     }
                 }
@@ -327,7 +412,7 @@
                         
                         <% # DISPLAY LINE NUMBER %>
                         <% if lineNum.to_i % 5 == 0 %>
-                            <p class="lineNum">
+                            <p class="lineNum" id = "originalLineNum">
                                 <%= lineNum %>
                             </p>
                         <% end %>
@@ -352,7 +437,7 @@
                         <% end %>
 
                         <% # BREAK FOR NEW LINE %>
-                        <br>
+                        <br class = "newLine" data-lineNum=<%= lineNum %>  >
 
 
 
