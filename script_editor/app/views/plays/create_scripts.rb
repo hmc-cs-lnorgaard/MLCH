@@ -1,8 +1,27 @@
 require 'nokogiri'
 
+# plays = ["MND", "AWW", "Ant", "AYL", "Cor", "Cym", "Ham", "1H4", "2H4", "H5", "1H6", "2H6", "3H6", "H8", "JC", 
+#         "Jn", "Lr", "LLL", "Luc", "Mac", "MM", "Ado", "Oth", "Per", "R2", "R3", "Rom", "Son", "Shr", "Err", 
+#         "MV", "Wiv", "PhT", "Tmp", "TGV", "TNK", "WT", "Tim", "Tit", "Tro", "TN", "Ven"]
 
-    doc = Nokogiri::XML(File.open("MND_copy.xml"))
+def createAllScripts()
+    testplays = [['MND', 'a_midsummer_nights_dream'], ['AWW', 'alls_well_that_ends_well'], ['Ant', 'test123']]
 
+    testplays.each do |play|
+        text = createScript(play[0])
+        filename = '../../../edited_' + play[1] + '.html'
+        File.open(filename, "w") {|f| f.write(text)}
+    end 
+end
+
+def createScript(title)
+
+    doctitle = "../../../../FolgerDigitalTexts_XML_Complete/" + title.to_s + ".xml"
+
+    doc = Nokogiri::XML(File.open(doctitle))
+
+    # doc = Nokogiri::XML(File.open("../../../../FolgerDigitalTexts_XML_Complete/MND.xml"))
+    
     htmlstring = ""
 
     currAct = 1
@@ -97,11 +116,11 @@ require 'nokogiri'
                             if word.attr('xml:id').to_s == id
                             # DISPLAY EACH WORD
                             if (word.inner_text == ".") || (word.inner_text == ",") || (word.inner_text == "?") || (word.inner_text == "!") || (word.inner_text == ";") || (word.inner_text == ":")
-                                wordstring = '<button class="punc" data-cut="false" data-display="true">' + word.inner_text + '</button>'
+                                wordstring = '<button class="punc" data-cut="false" data-display="true">' + word.inner_text + '</button> '
                                 htmlstring << wordstring
                             else
                                 if word.inner_text != "" && word.inner_text != " "
-                                    wordstring = '<button class="word" data-cut="false" data-display="true">' + word.inner_text + '</button>'
+                                    wordstring = '<button class="word" data-cut="false" data-display="true">' + word.inner_text + '</button> '
                                     htmlstring << wordstring
                                 end
                             end
@@ -140,4 +159,8 @@ require 'nokogiri'
     end
     htmlstring << '</div>'
 
-    File.open('test.txt', "w") {|f| f.write(htmlstring)}
+    return htmlstring
+
+end
+
+createAllScripts()

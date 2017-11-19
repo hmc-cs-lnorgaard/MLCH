@@ -18,6 +18,7 @@ class PlaysController < ApplicationController
     @string = "edited_" + @doctitle + ".html"
 
     if File.exists?(@string)
+      print "FILE FOUND. LOADING"
       @provideddocument = File.open(@string, "r")
       @provideddocument = File.read(@string)
     else 

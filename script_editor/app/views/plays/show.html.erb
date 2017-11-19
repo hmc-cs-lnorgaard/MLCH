@@ -1,4 +1,3 @@
-require "create_scripts"
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html><body>
@@ -12,10 +11,13 @@ require "create_scripts"
     <% doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/MND.xml"))
     if "#{request.fullpath}" == "/plays/a_midsummer_nights_dream"
         doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/MND.xml"))
+        testtitle = "MND"
     elsif "#{request.fullpath}" == "/plays/alls_well_that_ends_well"
         doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/AWW.xml"))
+        testtitle = "AWW"
     elsif "#{request.fullpath}" == "/plays/antony_and_cleopatra"
         doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/Ant.xml"))
+        testtitle = "Ant"
     elsif "#{request.fullpath}" == "/plays/as_you_like_it"
         doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/AYL.xml"))
     elsif "#{request.fullpath}" == "/plays/coriolanus"
@@ -563,127 +565,9 @@ require "create_scripts"
             <script>
                 console.log("provideddocument was empty")
             </script>
+
+            <% create_scripts.createScript(testtitle) %>
         
-            <% currAct = 1 %>
-            <% currScene = 1 %>
-            <% currIndex = 1 %>  
-
-            <% acts= doc.css('//div1') %>
-            <% acts.each do |act| %>
-                <% if Nokogiri::XML(act.to_s).css('head').first != nil %>
-                <div class="actDiv" id="<%= escape_javascript "Diva" + currAct.to_s%>"><button class="acthead" id="<%= escape_javascript "a" + currAct.to_s %>" data-cut="false" data-display="true"> <%= Nokogiri::XML(act.to_s).css('head').first.inner_text %></button><br></b>
-                <% end %>
-        
-                <% currAct = currAct + 1 %>
-                <% scenes = Nokogiri::XML(act.to_s).css('//div2') %>
-                <% currScene = 1 %>
-                <% scenes.each do |scene| %>
-                    <% if Nokogiri::XML(scene.to_s).css('head').first != nil %>
-                    <div class="sceneDiv" id="<%= escape_javascript "Divs" + currIndex.to_s%>"><button class="scenehead" id="<%= escape_javascript "s" + currIndex.to_s %>" data-cut="false" data-display="true"><%= Nokogiri::XML(scene.to_s).css('head').first.inner_text %></button><br>
-                    <% end %>
-                
-                    <% currScene = currScene + 1 %>
-                    <% currIndex = currIndex + 1 %>
-
-                    <% lines = Nokogiri::XML(scene.to_s).css('//sp') %>
-                    <% stages = Nokogiri::XML(scene.to_s).css('stage').to_a %>
-
-                    <% lines.each do |line| %>
-                    <% # DISPLAY STAGE DIRECTIONS %>
-                        <% # Get line id %>
-                        <% lineN = line.attr("xml:id").to_s.gsub("sp-","").to_f %>
-
-                        <% stages.each do |stage| %>
-                            <% # Get stage direction id %>
-                            <% stageN = stage.attr('xml:id').to_s.gsub("stg-","").to_f %>
-                            <% # If there is a stage dir that comes before the line %>
-                            <% if (stageN < lineN) and (stageN >= lineN-1.0)%>
-                                <% # display stage direction %>
-                                <br>
-                                <button class="stage" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
-                                <% stages.delete(stage) %>
-                            <% end %>
-                        <% end %>
-
-                        <% # Getting all the info needed for each line %>
-                        <% speaker = Nokogiri::XML(line.to_s).css('speaker') %>
-                        <% milestones = Nokogiri::XML(line.to_s).css('milestone') %>
-                        <% spwords = Nokogiri::XML(line.to_s).css('w','c','pc') %>
-
-                        <% # DISPLAY SPEAKER %>
-                        <br><p class="speaker"><%=speaker.inner_text%> </p><br>
-
-                        <% # DISPLAY LINES %>
-                        <% milestones.each do |ms| %>
-
-                            <% msN = ms.attr("xml:id").to_s.gsub("ftln-","").to_i %>
-                            <% stages.each do |stage| %>
-                                <% # Get stage direction id %>
-                                <% stageN = stage.attr('xml:id').to_s.gsub("stg-","").to_i %>
-                                <% # If there is a stage dir inside speech %>
-                                <% if (stageN <= msN) and (stageN >= msN-1.0) %>
-                                <% # display stage direction %>
-                                    <button class="stage inside" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
-                                    <% stages.delete(stage) %>
-                                <% end %>
-                            <% end %>
-
-                            <% # get line number %>
-                            <% lineNum = ms.attr("n").to_s.split(".")[2] %>
-                            <% # get corresps per milestone in array %>
-                            <% wordIDs = ms.attr("corresp").to_s.split(" ") %>
-                            <% # remove #s %>
-                            <% wordIDs = wordIDs.map { |w| w.gsub("#","")} %>
-                            <% # Search spwords for corresponding w/c/pc %>
-                            
-                            <% # DISPLAY LINE NUMBER %>
-                            <% if lineNum.to_i % 1 == 0 %>
-                                <p class="lineNum"><%= lineNum %></p>
-                            <% end %>
-
-                            <% wordIDs.each do |id| %>
-                                <% spwords.each do |word| %>
-                                    <% if word.attr('xml:id').to_s == id %>
-                                    <% # DISPLAY EACH WORD %>
-                                    <% if (word.inner_text == ".") || (word.inner_text == ",") || (word.inner_text == "?") || (word.inner_text == "!") || (word.inner_text == ";") || (word.inner_text == ":") %>
-                                        <button class="punc" data-cut="false" data-display="true"><%= word.inner_text %></button>
-                                    <% else %>
-                                        <% if word.inner_text != "" && word.inner_text != " " %>
-                                            <button class="word" data-cut="false" data-display="true"><%= word.inner_text %></button>
-                                        <% end %>
-                                    <% end %>
-                                <% end %>
-                            <% end %>
-                        <% end %>
-
-                        <% # BREAK FOR NEW LINE %>
-                        <br>
-
-
-                        <% stages.each do |stage| %>
-                            <% # Get stage direction id %>
-                            <% stageN = stage.attr('xml:id').to_s.gsub("stg-","").to_f %>
-                            <% # If there is a stage dir inside speech %>
-                            <% if (stageN >= msN) and (stageN < msN+1.0) %>
-                                <% # display stage direction %>
-                                <button class="stage inside" data-cut="false" data-display="true"> <%= stage.inner_text %> </button> <br>
-                                <% stages.delete(stage) %>
-                            <% end %>
-                        <% end %>
-
-                    <% end %>
-                    <% end %>
-
-                    <br>
-                    <% stages.each do |stage| %>
-                        <button class="stage" data-cut="false" data-display="true"><%= stage.inner_text %></button> <br>
-                        <% stages.delete(stage) %>
-                    <% end %>
-                <% end%>
-                </div>
-                <br>
-            <%end%>
-            </div>
         <% end %>
     </div>
 
