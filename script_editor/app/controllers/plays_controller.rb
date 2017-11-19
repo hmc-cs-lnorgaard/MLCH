@@ -1,4 +1,5 @@
 require 'nokogiri'
+require_relative 'create_scripts'
 
 class PlaysController < ApplicationController
   
@@ -12,6 +13,9 @@ class PlaysController < ApplicationController
   end
 
   def show
+
+
+    plays = { "a_midsummer_nights_dream" => "MND", "alls_well_that_ends_well" => "AWW"}
     
     @doctitle = params[:play]
     
@@ -23,8 +27,9 @@ class PlaysController < ApplicationController
       @provideddocument = File.read(@string)
     else 
       print "NO DOCUMENT PROVIDED. CREATING NEW ONE"
-      @provideddocument = ""  #perhaps here we can provide the html files we already have?
+      @provideddocument = createScript(plays[@doctitle])  #perhaps here we can provide the html files we already have?
       #until then we can check in the HTML if this variable is equal to "" and if so parse it there
+      File.open(@string, "w") {|f| f.write(@provideddocument)}
     end
   end
 end
