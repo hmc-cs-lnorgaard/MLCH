@@ -4,9 +4,8 @@
     <p id="notice"></p>
 
     <!-- 
-        Decide what XML file to open depending on the URL.
-        We did them one-by-one because the URL's didn't match
-        Folger Digital Text's file-naming scheme. 
+        Decide what XML file to open depending on the title acronym.
+        doc variable now only used to obtain proper title and list of acts/scenes.
     -->
     <% doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/"+@acronym+".xml")) %>
 
@@ -29,8 +28,7 @@
 
 
     <!-- 
-        Parse the XML file for number of acts & scenes in order to 
-        create the navigation bar 
+        Set up navigation bar, toggle button, and save button
     -->
     <div class="script-side-bar">
         <div class="play-navigation">
@@ -439,10 +437,16 @@
             <input type="hidden" name="savetitle" value="">
             <input type="submit" style="visibility:hidden;" name="saveButton" value="Save">    
         </form>
-            
+          
+    <!-- 
+        Save button functionality.
+        Get the contents of script-main and assign the values of the hidden form above to contain it.
+        Simulate click on submit button to force the correct order of assignment and form submission.
+    -->  
     <script>
         var saveBtn = document.getElementById("save-button")
-        saveBtn.onclick = function() {          
+        saveBtn.onclick = function() { 
+
             var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
             var form = document.getElementById("saveForm")
             form.elements["savedocument"].value = fullScript
@@ -457,7 +461,7 @@
 
 
     <!-- 
-        Parse the XML file for the actual script, and display everything 
+        Retrieve the preprocess or saved HTML and fill out script-main, and catch the case in which it is empty, which should never happen.
     -->
     <div class="script-main"> 
         

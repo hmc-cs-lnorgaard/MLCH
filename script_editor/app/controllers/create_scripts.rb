@@ -1,5 +1,7 @@
 require 'nokogiri'
 
+
+#loop through all available plays and parse XML for each one
 def createAllScripts()
 
     plays = [["MND", "a_midsummer_nights_dream"], ["AWW", 'alls_well_that_ends_well'], ["Ant", 'antony_and_cleopatra'], ["AYL", 'as_you_like_it'], ["Cor", 'coriolanus'], ["Cym", 'cymbeline'], 
@@ -19,6 +21,8 @@ end
 
 def createScript(title, flag)
 
+    #If this was called from the command line or from the controller, 
+    #the files for some reason need different paths
     if flag == true
         doctitle = "../../FolgerDigitalTexts_XML_Complete/" + title.to_s + ".xml"
     else 
@@ -28,7 +32,6 @@ def createScript(title, flag)
 
     doc = Nokogiri::XML(File.open(doctitle))
 
-    # doc = Nokogiri::XML(File.open("../../../../FolgerDigitalTexts_XML_Complete/MND.xml"))
     
     htmlstring = ""
 
@@ -52,7 +55,7 @@ def createScript(title, flag)
             
             if Nokogiri::XML(scene.to_s).css('head').first != nil
                 scenename = "Divs" + currScene.to_s
-                sceneheadname = "s" + currIndex.to_s #CHANGED SCENE TO INDEX
+                sceneheadname = "s" + currIndex.to_s 
                 scenestring = '<div class="sceneDiv" id="'+ scenename + '"><button class="scenehead" id="' + sceneheadname + '" data-cut="false" data-display="true">' +  Nokogiri::XML(scene.to_s).css('head').first.inner_text + '</button><br>'
                 htmlstring << scenestring
             end
@@ -155,6 +158,7 @@ def createScript(title, flag)
             end
             end
 
+            #Any last stage direction at the end of the section
             htmlstring << '<br>'
             stages.each do |stage|
                 stagestring = '<button class="stage" data-cut="false" data-display="true">' + stage.inner_text + '</button> <br>'
@@ -171,6 +175,8 @@ def createScript(title, flag)
 
 end
 
+
+#parsing command line arguments, usage: ruby create_scripts.rb all
 all_flag = ARGV
 
 if all_flag == 'all'
