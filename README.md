@@ -1,5 +1,19 @@
 # Shakespeare Script Editor
-
+## Contents
+1. [Summary](#summary) 
+2. [Installation] (#installation)
+3. [Usage](#usage)
+4. [Contributing] (#contributing)
+5. [Problem description](#problem-description)
+6. [Stakeholders](#stakeholders)
+7. [Background research] (#background-research)
+8. [Proposed Solution] (#proposed-solution)
+    * [Minimum Viable Product] (#minimum-viable-product-(mvp))
+    * [Architecture Model] (#architecture-model)
+    * [Use Cases](#use-cases)
+    * [Functionality, products and services] (#functionality,-products-and-services)
+9. [Timeline](#timeline)
+## Summary 
 The Shakespeare Script Editor is a website made by team Pawgrammers for CS121: Software Development in the Fall 2017 semester progressing upon work done by team MLCH completed in the Spring 2017 semester. Our web app provides a simple and easy way for directors and actors to
 edit scripts and read plays. On the website, a user can choose between any of Shakespeare’s plays. Chosen plays are not only readable, but editable! Users can cut down the play word-by-word. After editing the play to their specifications, the website will provide relevant data and statistics too, such as the number of lines in the play and the number of lines for each individual character in a particular play.
 
