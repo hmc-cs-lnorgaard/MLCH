@@ -849,7 +849,7 @@
                     Array.from(scene.children).forEach(
                         function(child) {
                             if (child.className == 'speaker') {
-                                curChar = child.innerText
+                                curChar = child.innerText.trim()
                             }
                             if (child.dataset.linenum) {
                                 lineNum = parseInt(child.dataset.linenum)
