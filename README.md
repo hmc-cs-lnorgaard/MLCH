@@ -1,17 +1,17 @@
 # Shakespeare Script Editor
 ## Contents
 1. [Summary](#summary) 
-2. [Installation] (#installation)
+2. [Installation](#installation)
 3. [Usage](#usage)
-4. [Contributing] (#contributing)
+4. [Contributing](#contributing)
 5. [Problem description](#problem-description)
 6. [Stakeholders](#stakeholders)
-7. [Background research] (#background-research)
-8. [Proposed Solution] (#proposed-solution)
-    * [Minimum Viable Product] (#minimum-viable-product-(mvp))
-    * [Architecture Model] (#architecture-model)
-    * [Use Cases](#use-cases)
-    * [Functionality, products and services] (#functionality,-products-and-services)
+7. [Background research](#background-research)
+8. [Proposed Solution](#proposed-solution)
+    * [Minimum Viable Product](#minimum-viable-product)
+    * [Architecture Model](#architecture-model)
+    * [Use Cases](#use-case)
+    * [Functionality, products and services](#functionality)
 9. [Timeline](#timeline)
 ## Summary 
 The Shakespeare Script Editor is a website made by team Pawgrammers for CS121: Software Development in the Fall 2017 semester progressing upon work done by team MLCH completed in the Spring 2017 semester. Our web app provides a simple and easy way for directors and actors to
@@ -105,7 +105,7 @@ functionality is one of our major goals, we plan to adapt Canvas’
 implementation of it to the MLCH site.
 
 ## Proposed solution
-### Minimuum Viable Product (MVP)
+### Minimum Viable Product
 Our MVP will be built off of one of the codebases provided from previous
 semesters. We will use their webpage layout and the parser they worked
 on to put the plays on the site. Forking one of these provided codebases
@@ -116,7 +116,7 @@ browser’s search functionality. On top of these pre-provided functions our
 MVP should include the ability to cut out words of the play by highlighting
 them, and then saving these edits.
 
-### Architectural Model 
+### Architecture Model 
 #### High Level Design 
 Our architecture at large has three categories: preprocessing steps, serverside
 architecture, and client-side UI. Figure 1 below presents a component
@@ -158,7 +158,7 @@ with the different pages of the site.
 
 # Place figure 4 from phase 3 reports here 
 
-### Functionality, products and services 
+### Functionality
 This section outlines our plans to to implement other functionality on top
 of our MVP. 
 1. Viewing: The user will be able to see any Shakespeare play in readable,
@@ -262,7 +262,7 @@ Team 1. 2017. Shakespeare Script Editor. Print.
 
 ## History
 
-12/5/2017: Version 2.0.0
+11/21/2017: Version 2.0.0
     Implemented Features:
         Highlight cutting 
         Toggle View
