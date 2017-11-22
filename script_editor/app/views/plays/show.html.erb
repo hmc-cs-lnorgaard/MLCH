@@ -159,13 +159,18 @@
                     var speakers = Array.from(document.getElementsByClassName("speaker"))
                     var cuttableScript = words.concat(punctuation).concat(directions).concat(speakers);
                     cuttableScript.forEach(function(word) {
-                        if (toggleBtn.curState == "showing" && word.dataset.cut == "true") // User wishes to hide edit
+                        if (toggleBtn.curState == "showing" ) // User wishes to hide edit
                         {
+                            word.disabled = 'true'
+                            if (word.dataset.cut == "true")
+                            { 
                             word.style.display = 'none'
+                            }
                         }
-                        else //user wishes to show edits
+                        else //User wishes to show edits
                         {
                             word.style.display = 'initial'
+                            word.removeAttribute('disabled')
                         }
 
                     })
