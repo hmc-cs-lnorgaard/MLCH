@@ -144,6 +144,9 @@ button:focus {outline:0;}
     left: 30px;
 }
 
+button:disabled {
+    color: black
+}
 .stage {
      background:none;
      background-color: none;
