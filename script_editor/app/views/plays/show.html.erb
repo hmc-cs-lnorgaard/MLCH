@@ -147,6 +147,7 @@
                 toggleBtn.onclick = function() {
                     toggleScript()
                     formatPage()
+                    formatBreaks()
                     adjustLines()
                     buttonChange()
                 }
@@ -223,6 +224,34 @@
                     }
                 }                    
 
+                //formatBreaks handles adjusting the spacing around speakers and stage directions  when they're hidden 
+                function formatBreaks(){
+                    var elements = Array.from(document.getElementsByClassName("speaker")).concat(Array.from(document.getElementsByClassName("stage")))
+                    elements.forEach(function(element)
+                    {
+                        var curIndex = Array.from(element.parentNode.children).indexOf(element)
+                        var prevBreak = curIndex - 1
+                        var postBreak = curIndex + 1
+                        if (element.dataset.cut == "true" && toggleBtn.curState == "showing")
+                        {
+                            if (element.parentNode.children[prevBreak].type == "br") //TODO -- Need to find the way to get the type of the tag 
+                            {
+                                element.parentNode.children[prevBreak].style.display = 'none'
+                            }
+                            if (element.parentNode.children[postBreak].type == "br")
+                            {
+                                element.parentNode.children[postBreak].style.display = 'none'
+                            }
+                        }
+                        else
+                        {
+                            element.parentNode.children[prevBreak].style.display = 'initial'
+                            element.parentNode.children[postBreak].style.display = 'initial'
+                        }
+
+                    })
+
+                }
                 //adjustLines alters the line numbers dynamically as the user cuts lines out of the play 
                 function adjustLines() {
                     var originalLineNums = Array.from(document.querySelectorAll("[id = 'originalLineNum']"))
