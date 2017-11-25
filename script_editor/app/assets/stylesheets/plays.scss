@@ -3,16 +3,30 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 @media print { 
-    .noprint { 
-        display:none; 
+
+    .noprint, #Home-button, #home, div.script-side-bar { 
+        display: none !important; 
+    }
+
+    #play-title {
+        width: 100% !important;
+    }
+
+    div.script-main {
+        left: 0 !important;
+        margin-left: 5% !important;
+        overflow: visible !important;
+        position: absolute !important;
+        width: 100% !important;
     }
 }
 
 body { 
     font-family: 'Times New Roman'; 
-    font-size:13pt; 
+    font-size: 13pt; 
     margin:10px 0px; 
     padding:0px;
+    overflow: visible;
 }
 
 div.stage {
@@ -21,9 +35,9 @@ div.stage {
 
 p.lineNum {
     padding: 0px;
-    margin-right: 10px;
+    margin: 0 10px 0 0;
     font-size: 14px;
-    display: inline;
+    position: absolute;
     color: gray;
     font-family: serif;
 }
@@ -86,12 +100,14 @@ div.script-side-bar {
 
 div.script-main {
     position: fixed;
-    width: 50%;
+    width: 70%;
     overflow-y: scroll;
     top: 10%;
     bottom: 0;
-    right: 15%;
+    left: 25%;
     z-index:0;
+    text-align: left;
+    overflow-x: hidden;
 }
 
 #title {
@@ -103,6 +119,8 @@ div.script-main {
 // For editable word buttons
 /////////////////////////////////
 
+button:focus {outline:0;}
+
 .punc {
     background:none;
     background-color: none;
@@ -111,6 +129,8 @@ div.script-main {
     margin-left: -5px;
     border:none; 
     font-size: 14px;
+    position: relative;
+    left: 30px;
 }
 
 .word {
@@ -120,8 +140,13 @@ div.script-main {
     margin: 0px;
     border:none;
     font-size: 14px;
+    position: relative;
+    left: 30px;
 }
 
+button:disabled {
+    color: black
+}
 .stage {
      background:none;
      background-color: none;
@@ -130,6 +155,8 @@ div.script-main {
      border:none;
      padding:0!important;
      font-size: 14px;
+     position: relative;
+     left: 30px;
 }
 
 .acthead {
@@ -139,9 +166,8 @@ div.script-main {
      text-decoration: none;
      border:none;
      text-align: left;
-     margin-left: 25px;
      padding:0!important;
-     font-size: 14px;
+     font-size: 28px;
 }
 
 .scenehead {
@@ -151,9 +177,8 @@ div.script-main {
      text-decoration: none;
      border:none;
      text-align: left;
-     margin-left: 25px;
      padding:0!important;
-     font-size: 14px;
+     font-size: 22px;
 }
 
 .character {
@@ -164,6 +189,21 @@ div.script-main {
      text-align: left;
      margin-left: 25px;
      padding:0!important;
+}
+
+p.analytic {
+   margin-top: 0px;
+   margin-bottom: 0px;
+}
+
+span.original {
+    width: 50%;
+    float: left;
+}
+
+span.concise {
+    width: 50%;
+    text-align: right;
 }
 
 /////////////////////////////////
@@ -193,6 +233,15 @@ button.nav-synopsis, button.nav-analytics {
     width: 100%;
 }
 
+div.break {
+    height: 5px;
+    text-align: center;
+    background-color: #aaaaaa;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #aaaaaa;
+    width: 98%;
+}
 button.nav-analytics {
     height: 40px;
     text-align: center;
