@@ -398,6 +398,7 @@
                                 <% end %>
                             <% end %>
 
+
                             <% # getting all the info needed for each line %>
                             <% speaker = Nokogiri::XML(line.to_s).css('speaker') %>
                             <% milestones = Nokogiri::XML(line.to_s).css('milestone') %>
@@ -405,9 +406,9 @@
 
                             <% # DISPLAY SPEAKER %>
                             <br>
-                            <p class="speaker">
+                            <button class="speaker">
                                 <%=speaker.inner_text%>
-                            </p>
+                            </button>
                             <br>
                             <% # DISPLAY LINES %>
                             <% milestones.each do |ms| %>

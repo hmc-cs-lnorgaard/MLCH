@@ -42,11 +42,14 @@ p.lineNum {
     font-family: serif;
 }
 
-p.speaker {
+button.speaker {
     padding: 0px;
     margin: 0px;
     font-size: 14px;
     display: inline;
+    background:none;
+    background-color: none;
+    border:none;
 }
 
 br { 
