@@ -234,11 +234,11 @@
                         var postBreak = curIndex + 1
                         if (element.dataset.cut == "true" && toggleBtn.curState == "showing")
                         {
-                            if (element.parentNode.children[prevBreak].type == "br") //TODO -- Need to find the way to get the type of the tag 
+                            if (element.parentNode.children[prevBreak].nodeName == "BR") //TODO -- Need to find the way to get the type of the tag 
                             {
                                 element.parentNode.children[prevBreak].style.display = 'none'
                             }
-                            if (element.parentNode.children[postBreak].type == "br")
+                            if (element.parentNode.children[postBreak].nodeName == "BR")
                             {
                                 element.parentNode.children[postBreak].style.display = 'none'
                             }
