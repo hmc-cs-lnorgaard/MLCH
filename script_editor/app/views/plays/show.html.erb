@@ -2,7 +2,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html><body>
     <p id="notice"></p>
-
     <!-- 
         Decide what XML file to open depending on the title acronym.
         doc variable now only used to obtain proper title and list of acts/scenes.
@@ -10,7 +9,7 @@
     <% doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/"+@acronym+".xml")) %>
 
     <!-- 
-        Get title of play and display at top of page 
+        Get title of play and display at top of page  
     -->
     <div class="script-title">
         <div id="Home-button">
@@ -26,10 +25,7 @@
 
     </div>
 
-
-    <!-- 
-        Set up navigation bar, toggle button, and save button
-    -->
+    <!-- Set up navigation bar, toggle button, and save button -->
     <div class="script-side-bar">
         <div class="play-navigation">
 
@@ -42,6 +38,7 @@
             <!-- This button toggles the strikethrough edits' visibility -->
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button"> HIDE EDITS </button>
 
+            <!-- This button allows the user to save their edits -->
             <button class = "nav-analytics" id="save-button"> SAVE </button>
         
             <script>
@@ -83,7 +80,9 @@
              </script>
              <div class = "break"> </div>
 
-            <!-- Create a button for each act and scene in the play -->
+            <!-- 
+                Create a button for each act and scene in the play in the navigation bar 
+            -->
             <% currAct = 1 %>
             <% currScene = 1 %>
             <% currIndex = 1 %>
@@ -430,53 +429,42 @@
             }
         } 
     </script>
-
+        <!-- Form for saved HTML -->
         <form action="/plays/save" method="post" id="saveForm">
             <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
-            <input type="hidden" name="savedocument" value="">
+            <input type="hidden" name="savedocument" value=""> 
             <input type="hidden" name="savetitle" value="">
             <input type="submit" style="visibility:hidden;" name="saveButton" value="Save">    
         </form>
           
     <!-- 
-        Save button functionality.
+        Save button functionality
         Get the contents of script-main and assign the values of the hidden form above to contain it.
         Simulate click on submit button to force the correct order of assignment and form submission.
     -->  
     <script>
         var saveBtn = document.getElementById("save-button")
         saveBtn.onclick = function() { 
-
             var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
             var form = document.getElementById("saveForm")
-            form.elements["savedocument"].value = fullScript
             url = window.location.href
             playName = /^http:\/\/localhost:3000\/plays\/(\w*)(?:#[s,a][\d]+)?$/.exec(url)[1]
+            form.elements["savedocument"].value = fullScript
             form.elements["savetitle"].value = playName
-            // form.elements["savetitle"].value = document.getElementById('title').innerHTML
             form.elements["saveButton"].click()
-
         }
     </script>
 
 
     <!-- 
-        Retrieve the preprocess or saved HTML and fill out script-main, and catch the case in which it is empty, which should never happen.
+        Retrieve the saved HTML and fill out script-main 
     -->
     <div class="script-main"> 
-        
-        <% if @provideddocument != "" %>
-            <%= content_tag :div, class: "edited-script", data: {provideddocument: @provideddocument} do %>
-            <% end %>
-            <script>
-                document.getElementsByClassName('script-main')[0].innerHTML = $('.edited-script').data('provideddocument')
-            </script>
-        <% else %>
-            <script>
-                console.log("error: provideddocument was empty. bad query.")
-            </script>
-   
+        <%= content_tag :div, class: "edited-script", data: {provideddocument: @provideddocument} do %>
         <% end %>
+        <script>
+            document.getElementsByClassName('script-main')[0].innerHTML = $('.edited-script').data('provideddocument')
+        </script>
     </div>
 
 </body></html>

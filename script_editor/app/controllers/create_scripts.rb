@@ -1,15 +1,16 @@
 require 'nokogiri'
 
 
-#loop through all available plays and parse XML for each one
+# Loop through all available plays and parse XML for each one
 def createAllScripts()
 
+    # List of lists that pairs all play names with their Folger's acronyms
     plays = [["MND", "a_midsummer_nights_dream"], ["AWW", 'alls_well_that_ends_well'], ["Ant", 'antony_and_cleopatra'], ["AYL", 'as_you_like_it'], ["Cor", 'coriolanus'], ["Cym", 'cymbeline'], 
         ["Ham", 'hamlet'], ["1H4", 'henry_iv_part_1'], ["2H4", 'henry_iv_part_2'], ["H5", 'henry_v'], ["1H6",'henry_vi_part_1'], ["2H6", 'henry_vi_part_2'],
-        ["3H6", 'henry_vi_part_3'], ["H8", 'henry_viii'], ["JC", 'julius_caesar'],  ["Jn", 'king_john'], ["Lr", 'king_lear'], ["LLL", 'loves_labors_lost'], ["Luc", 'lucrece'],
+        ["3H6", 'henry_vi_part_3'], ["H8", 'henry_viii'], ["JC", 'julius_caesar'],  ["Jn", 'king_john'], ["Lr", 'king_lear'], ["LLL", 'loves_labors_lost'],
         ["Mac", 'macbeth'], ["MM", 'measure_for_measure'], ["Ado", 'much_ado_about_nothing'], ["Oth", 'othello'], ["Per", 'pericles'], ["R2", 'richard_ii'], ["R3", 'richard_iii'], 
-        ["Rom", 'romeo_and_juliet'], ["Son", 'shakespeares_sonnets'], ["Shr", 'taming_of_the_shrew'], ["Err", 'the_comedy_of_errors'], ["MV", 'the_merchant_of_venice'], ["Wiv", 'the_merry_wives_of_windsor'],
-        ["PhT", 'the_phoenix_and_turtle'], ["Tmp", 'the_tempest'], ["TGV", 'the_two_gentlemen_of_verona'], ["TNK", 'the_two_noble_kinsmen'], ["WT", 'the_winters_tale'],
+        ["Rom", 'romeo_and_juliet'], ["Shr", 'taming_of_the_shrew'], ["Err", 'the_comedy_of_errors'], ["MV", 'the_merchant_of_venice'], ["Wiv", 'the_merry_wives_of_windsor'],
+        ["Tmp", 'the_tempest'], ["TGV", 'the_two_gentlemen_of_verona'], ["TNK", 'the_two_noble_kinsmen'], ["WT", 'the_winters_tale'],
         ["Tim", 'timon_of_athens'], ["Tit", 'titus_andronicus'], ["Tro", 'troilus_and_cressida'], ["TN", 'twelfth_night'], ["Ven", 'venus_and_adonis']]
 
     plays.each do |play|
@@ -21,8 +22,8 @@ end
 
 def createScript(title, flag)
 
-    #If this was called from the command line or from the controller, 
-    #the files for some reason need different paths
+    # If this was called from the command line or from the controller, 
+    # the files for some reason need different paths
     if flag == true
         doctitle = "../../FolgerDigitalTexts_XML_Complete/" + title.to_s + ".xml"
     else 
@@ -35,10 +36,12 @@ def createScript(title, flag)
     
     htmlstring = ""
 
+    # Create act and scene numbers to update
     currAct = 1
     currScene = 1
     currIndex = 1  
 
+    # DISPLAY ACT NUMBER
     acts = doc.css('//div1')
     acts.each do |act|
         if Nokogiri::XML(act.to_s).css('head').first != nil
@@ -48,11 +51,11 @@ def createScript(title, flag)
             htmlstring << actstring
         end
         
+        # DISPLAY SCENE NUMBER
         currAct = currAct + 1
         scenes = Nokogiri::XML(act.to_s).css('//div2')
         currScene = 1
-        scenes.each do |scene|
-            
+        scenes.each do |scene|       
             if Nokogiri::XML(scene.to_s).css('head').first != nil
                 scenename = "Divs" + currScene.to_s
                 sceneheadname = "s" + currIndex.to_s 
@@ -158,7 +161,7 @@ def createScript(title, flag)
             end
             end
 
-            #Any last stage direction at the end of the section
+            # Any last stage direction at the end of the section
             htmlstring << '<br>'
             stages.each do |stage|
                 stagestring = '<button class="stage" data-cut="false" data-display="true">' + stage.inner_text + '</button> <br>'
@@ -166,9 +169,11 @@ def createScript(title, flag)
                 stages.delete(stage)
             end
         end
+
         htmlstring << '</div>'
         htmlstring << '<br>'
     end
+
     htmlstring << '</div>'
 
     return htmlstring
@@ -176,7 +181,7 @@ def createScript(title, flag)
 end
 
 
-#parsing command line arguments, usage: ruby create_scripts.rb all
+# Parsing command line arguments, usage: ruby create_scripts.rb all
 all_flag = ARGV
 
 if all_flag == 'all'
