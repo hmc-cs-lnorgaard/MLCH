@@ -3,16 +3,30 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 @media print { 
-    .noprint { 
-        display:none; 
+
+    .noprint, #Home-button, #home, div.script-side-bar { 
+        display: none !important; 
+    }
+
+    #play-title {
+        width: 100% !important;
+    }
+
+    div.script-main {
+        left: 0 !important;
+        margin-left: 5% !important;
+        overflow: visible !important;
+        position: absolute !important;
+        width: 100% !important;
     }
 }
 
 body { 
     font-family: 'Times New Roman'; 
-    font-size:13pt; 
+    font-size: 13pt; 
     margin:10px 0px; 
     padding:0px;
+    overflow: visible;
 }
 
 div.stage {
@@ -28,11 +42,14 @@ p.lineNum {
     font-family: serif;
 }
 
-p.speaker {
+button.speaker {
     padding: 0px;
     margin: 0px;
     font-size: 14px;
     display: inline;
+    background:none;
+    background-color: none;
+    border:none;
 }
 
 br { 
@@ -86,13 +103,14 @@ div.script-side-bar {
 
 div.script-main {
     position: fixed;
-    width: 50%;
+    width: 70%;
     overflow-y: scroll;
     top: 10%;
     bottom: 0;
-    right: 15%;
+    left: 25%;
     z-index:0;
     text-align: left;
+    overflow-x: hidden;
 }
 
 #title {
@@ -129,6 +147,9 @@ button:focus {outline:0;}
     left: 30px;
 }
 
+button:disabled {
+    color: black
+}
 .stage {
      background:none;
      background-color: none;
@@ -148,9 +169,8 @@ button:focus {outline:0;}
      text-decoration: none;
      border:none;
      text-align: left;
-     margin-left: 25px;
      padding:0!important;
-     font-size: 14px;
+     font-size: 28px;
 }
 
 .scenehead {
@@ -160,9 +180,8 @@ button:focus {outline:0;}
      text-decoration: none;
      border:none;
      text-align: left;
-     margin-left: 25px;
      padding:0!important;
-     font-size: 14px;
+     font-size: 22px;
 }
 
 .character {
@@ -173,6 +192,21 @@ button:focus {outline:0;}
      text-align: left;
      margin-left: 25px;
      padding:0!important;
+}
+
+p.analytic {
+   margin-top: 0px;
+   margin-bottom: 0px;
+}
+
+span.original {
+    width: 50%;
+    float: left;
+}
+
+span.concise {
+    width: 50%;
+    text-align: right;
 }
 
 /////////////////////////////////
