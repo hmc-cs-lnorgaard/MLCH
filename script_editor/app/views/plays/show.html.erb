@@ -9,14 +9,9 @@
     -->
     <% doc = Nokogiri::XML(File.open("FolgerDigitalTexts_XML_Complete/"+@acronym+".xml")) %>
 
-    <!-- 
-        Get title of play and display at top of page  
-    -->
-
     <% 
         # Get title of play and display at top of page 
     %>
-
     <div class="script-title">
         <div id="Home-button">
             <a id="home" href="/">
@@ -51,30 +46,30 @@
             <button class="nav-analytics" id="analytics-button">
                 ANALYTICS
             </button>
-
-            
-
-
-
-            <!-- This button allows the user to save their edits -->
-            <button class = "nav-analytics" id="save-button"> SAVE </button>
         
             <!-- This button toggles the strikethrough edits' visibility -->
             <button class = "nav-synopsis" curState = "showing" id="viewToggle-button">
-                Hide Edits
+                HIDE EDITS
             </button>
 
+            <!-- This button allows the user to save their edits -->
+            <button class = "nav-analytics" id="save-button"> SAVE </button>
 
+
+            <!--
+                This script tag creates a button which will hide the edits made by the use to create
+                a concise and readable version of the script. 
+            -->
             <script>
                 var toggleBtn = document.getElementById("viewToggle-button");
                 toggleBtn.curState = "showing";
                 toggleBtn.onclick = function() {
                     toggleScript()
                     formatPage()
+                    formatBreaks()
                     adjustLines()
                     buttonChange()
                 }
-
                 //toggleScript determines which elements of the scipt are cut and whether or not we wish to display those elements 
                 function toggleScript() { 
                     var words = Array.from(document.getElementsByClassName("word"));
@@ -96,7 +91,6 @@
                             word.style.display = 'initial'
                             word.removeAttribute('disabled')
                         }
-
                     })
                 }
 
@@ -145,13 +139,38 @@
                         }
                         ++index
                     }
-                }                    
+                }                   
 
+                //formatBreaks handles adjusting the spacing around speakers and stage directions  when they're hidden 
+                function formatBreaks(){
+                    var elements = Array.from(document.getElementsByClassName("speaker")).concat(Array.from(document.getElementsByClassName("stage")))
+                    elements.forEach(function(element)
+                    {
+                        var curIndex = Array.from(element.parentNode.children).indexOf(element)
+                        var prevBreak = curIndex - 1
+                        var postBreak = curIndex + 1
+                        if (element.dataset.cut == "true" && toggleBtn.curState == "showing") //we wish to hide the Speakers
+                        {
+                            if (element.parentNode.children[prevBreak].nodeName == "BR") // Remove the line break above the hidden speaker
+                            {
+                                element.parentNode.children[prevBreak].style.display = 'none'
+                            }
+                            if (element.parentNode.children[postBreak].nodeName == "BR") // Remove the line break below the hidden speaker 
+                            {
+                                element.parentNode.children[postBreak].style.display = 'none'
+                            }
+                        }
+                        else
+                        {
+                            element.parentNode.children[prevBreak].style.display = 'initial'
+                            element.parentNode.children[postBreak].style.display = 'initial'
+                        }
+                    })
+                }
                 //adjustLines alters the line numbers dynamically as the user cuts lines out of the play 
                 function adjustLines() {
                     var originalLineNums = Array.from(document.querySelectorAll("[id = 'originalLineNum']"))
                     var newLineNums = Array.from(document.querySelectorAll("[id = 'newLineNum']"))
-
                     originalLineNums.forEach(function(lineNumber)
                     {
                         if (toggleBtn.curState == "showing") //wish to hide edits
@@ -163,7 +182,6 @@
                             lineNumber.style.display = 'initial'
                         }
                     })   
-
                     newLineNums.forEach(function(lineNumber)
                     {
                         if (toggleBtn.curState == 'hiding') //wish to show edits
@@ -178,12 +196,12 @@
                     if (toggleBtn.curState == "hiding")  //wish to show edits
                     {
                         toggleBtn.curState = "showing"
-                        toggleBtn.innerHTML = "HIDE EDITS"
+                        toggleBtn.innerHTML = "Hide Edits"
                     } 
                     else if (toggleBtn.curState == "showing")    //wish to hide edits 
                     {
                         toggleBtn.curState = "hiding"
-                        toggleBtn.innerHTML = "SHOW EDITS"
+                        toggleBtn.innerHTML = "Show Edits"
                     }
                     else 
                     {
@@ -253,6 +271,17 @@
     </div>
 
 
+    <!-- 
+        Retrieve the saved HTML and fill out script-main 
+    -->
+    <div class="script-main"> 
+        <%= content_tag :div, class: "edited-script", data: {provideddocument: @provideddocument} do %>
+        <% end %>
+        <script>
+            document.getElementsByClassName('script-main')[0].innerHTML = $('.edited-script').data('provideddocument')
+        </script>
+    </div>
+
     <script>
 
         //create the event listeners for a user highlighting over text to be cut
@@ -284,7 +313,6 @@
                 lowIndex = Array.from(parent.children).indexOf(srcElement)
                 highIndex = nextSpeaker(srcElement, lowIndex + 2) //when cutting a whole speech, need the index of the
                 //next speech rather than the location of the mouseup
-
                 if (srcElement.dataset.cut == "true") {
                     toCut = false
                 }
@@ -353,7 +381,6 @@
                     speakerCut = false
             }
         }
-
         function uncut(element) {
             if (element.className == "word" || element.className == "punc" ||
                 element.className.indexOf("stage") !== -1 || (element.className == "speaker" && speakerCut == true)) {
@@ -373,103 +400,10 @@
                     return items.indexOf(element) + startIndex - 1 
                 }
             }  
-
             return items.length - 1 + startIndex //if we hit the very end of the play
-
         }
 
-        // NOT CURRENTLY USED, LEFT FOR FUTURE INFO
-        function doCut(clickedItem) {
-            // act
-            if (clickedItem.getAttribute("class") == "acthead") {
-            //    if (clickedItem.tagName.toLowerCase() == "button") {
-            //
-            //        // Don't cut Acts
-            //        var entireAct = document.getElementById("Div" + clickedItem.id);
-            //        var allChildren = entireAct.getElementsByTagName("button");
-            //        if (clickedItem.dataset.cut.toLowerCase() == "false") {
-            //            for (var i = 0; i < allChildren.length; i++) {
-            //                allChildren[i].style.color = "#D3D3D3";
-            //                allChildren[i].style.textDecoration = "line-through";
-            //                allChildren[i].dataset.cut = "true";
-            //            }
-            //            //clickedItem.style.color = "#D3D3D3";
-            //            //clickedItem.style.textDecoration = "line-through";
-            //            clickedItem.dataset.cut = "true";
-            //        }
-            //        // perform uncut
-            //        else {
-            //            for (var i = 0; i < allChildren.length; i++) {
-            //                allChildren[i].style.color = "#000000";
-            //                allChildren[i].style.textDecoration = "none";
-            //                allChildren[i].dataset.cut = "false";
-            //            }
-            //            // clickedItem.style.color = "#000000";
-            //            // clickedItem.style.textDecoration = "none";
-            //            clickedItem.dataset.cut = "false";
-            //        }
-            //    }    
-            }
-            // scene
-            else if (clickedItem.getAttribute("class") == "scenehead") {
-            //    if (clickedItem.tagName.toLowerCase() == "button") {
-            //        // perform cut
-            //        var entireScene = document.getElementById("Div" + clickedItem.id);
-            //        var allChildren = entireScene.getElementsByTagName("button");
-            //        if (clickedItem.dataset.cut.toLowerCase() == "false") {
-            //            for (var i = 0; i < allChildren.length; i++) {
-            //                allChildren[i].style.color = "#D3D3D3";
-            //                allChildren[i].style.textDecoration = "line-through";
-            //                allChildren[i].dataset.cut = "true";
-            //            }
-            //            //clickedItem.style.color = "#D3D3D3";
-            //            //clickedItem.style.textDecoration = "line-through";
-            //            clickedItem.dataset.cut = "true";
-            //        }
-            //        // perform uncut
-            //        else {
-            //            for (var i = 0; i < allChildren.length; i++) {
-            //                allChildren[i].style.color = "#000000";
-            //                allChildren[i].style.textDecoration = "none";
-            //                allChildren[i].dataset.cut = "false";
-            //            }
-            //            //clickedItem.style.color = "#000000";
-            //            //clickedItem.style.textDecoration = "none";
-            //            clickedItem.dataset.cut = "false";
-            //        }
-            //    }    
-            }
-            // stage
-            else if (clickedItem.getAttribute("class") == "stage") {
-                if (clickedItem.tagName.toLowerCase() == "button") {
-                    if (clickedItem.dataset.cut.toLowerCase() == "false") {
-                        clickedItem.style.color = "#D3D3D3";
-                        clickedItem.style.textDecoration = "line-through";
-                        clickedItem.dataset.cut = "true";
-                    }
-                    else {
-                        clickedItem.style.color = "#000000";
-                        clickedItem.style.textDecoration = "none";
-                        clickedItem.dataset.cut = "false";
-                    }
-                }    
-            }
-            // line
-            else if (clickedItem.getAttribute("class") == "word" || clickedItem.getAttribute("class") == "punc") {
-                if (clickedItem.tagName.toLowerCase() == "button") {
-                    if (clickedItem.dataset.cut.toLowerCase() == "false") {
-                        clickedItem.style.color = "#D3D3D3";
-                        clickedItem.style.textDecoration = "line-through";
-                        clickedItem.dataset.cut = "true";
-                    }
-                    else {
-                        clickedItem.style.color = "#000000";
-                        clickedItem.style.textDecoration = "none";
-                        clickedItem.dataset.cut = "false";
-                    }
-                }    
-            }
-        };
+        
     </script>
 
 
@@ -487,7 +421,6 @@
         function showScene(scene) {
             var allScenes = document.getElementsByClassName("scenehead");
             for (var i = 0; i < allScenes.length; i++) {
-                
                 if (("n" + allScenes[i].id) == scene.target.id) {
                     allScenes[i].style.backgroundColor = "yellow";
                     window.location.hash = allScenes[i].id;
@@ -538,7 +471,6 @@
         span.onclick = function() {
             modal.style.display = "none";
         }
-
         // Modified from MDN for set unions
         // This isn't used after optimization, but could be useful later
         union = function(setA, setB) {
@@ -548,7 +480,6 @@
             }
             return union;
         }
-
         /** 
          * This controls the analytics button in the navigation bar.
          */
@@ -562,19 +493,23 @@
             analytics = countAnalytics(scenes);
             formatAnalytics(analytics);
         }
-
-        formatAnalytics = function(analytics) {
+        formatAnalytics = function({lines, uncutLines, characterLines}) {
+            originalLines = lines.size
+            conciseLines = uncutLines.size
             // setup
-            innerHTML = `<p class="analytic"><span class="original">Original</span><span class="concise">Concise</span></p>`;
+            innerHTML = `<table><tr><th/><th>Original</th><th>Deleted</th><th>Concise</th></tr>`
             // total lines
-            innerHTML += `<p class="analytic"><span class="original">Lines: ${analytics.lines.size}</span><span class="concise">Concise Lines: ${analytics.uncutLines.size}</span></p>`
+            innerHTML += `<tr><td class="left-cell">Total Lines</td><td>${originalLines}</td><td>${originalLines - conciseLines}</td><td>${conciseLines}</td></tr>`
             // character lines
-            for (character in analytics.characterLines) {
-                innerHTML += `<p class="analytic"><span class="original">${character}: ${characterLines[character].total.size}</span><span class="concise">${character}: ${characterLines[character].uncut.size}</span></p>`
+            for (character in characterLines) {
+                originalCharLines = characterLines[character].total.size
+                conciseCharLines = characterLines[character].uncut.size
+                
+                innerHTML += `<tr><td class="left-cell">${character}:</td><td>${originalCharLines}</td><td>${originalCharLines - conciseCharLines}</td><td>${conciseCharLines}</td></tr>`
             }
+            innerHTML += `</table>`
             document.getElementById('hidden-analytics').innerHTML = innerHTML;
         }
-
         getScenes = function (script) {
             actsAndScenes = new Set(Array.from(script.getElementsByClassName('actDiv')));
             scenes = new Set();
@@ -613,7 +548,6 @@
             }
             return scenes
         }
-
         countAnalytics = function (scenes) {
             lines = new Set()
             uncutLines = new Set()
@@ -646,7 +580,6 @@
             )
             return { lines: lines, uncutLines: uncutLines, characterLines: characterLines }
         }
-
         span2.onclick = function() {
             modal2.style.display = "none";
         }
@@ -661,7 +594,7 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
-        } 
+        }  
     </script>
         <!-- Form for saved HTML -->
         <form action="/plays/save" method="post" id="saveForm">
@@ -679,26 +612,22 @@
     <script>
         var saveBtn = document.getElementById("save-button")
         saveBtn.onclick = function() { 
-            var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
-            var form = document.getElementById("saveForm")
-            url = window.location.href
-            playName = /^http:\/\/localhost:3000\/plays\/(\w*)(?:#[s,a][\d]+)?$/.exec(url)[1]
-            form.elements["savedocument"].value = fullScript
-            form.elements["savetitle"].value = playName
-            form.elements["saveButton"].click()
+            var toggleBtn = document.getElementById("viewToggle-button")
+            if (toggleBtn.curState == "hiding"){
+                alert("You may not save in concise view! Please switch to 'SHOW EDITS' to save.")
+            } else {
+                var fullScript = document.body.getElementsByClassName('script-main')[0].innerHTML
+                var form = document.getElementById("saveForm")
+                url = window.location.href
+                playName = /^http:\/\/localhost:3000\/plays\/(\w*)(?:#[s,a][\d]+)?$/.exec(url)[1]
+                form.elements["savedocument"].value = fullScript
+                form.elements["savetitle"].value = playName
+                form.elements["saveButton"].click()
+            }
         }
     </script>
 
 
-    <!-- 
-        Retrieve the saved HTML and fill out script-main 
-    -->
-    <div class="script-main"> 
-        <%= content_tag :div, class: "edited-script", data: {provideddocument: @provideddocument} do %>
-        <% end %>
-        <script>
-            document.getElementsByClassName('script-main')[0].innerHTML = $('.edited-script').data('provideddocument')
-        </script>
-    </div>
+    
 
 </body></html>

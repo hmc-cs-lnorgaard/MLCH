@@ -92,7 +92,7 @@ def createScript(title, flag)
                 spwords = Nokogiri::XML(line.to_s).css('w','c','pc')
 
                 # DISPLAY SPEAKER
-                speakerstring = '<br><p class="speaker">' + speaker.inner_text + '</p><br>'
+                speakerstring = '<br><button class="speaker">' + speaker.inner_text + '</button><br>'
                 htmlstring << speakerstring
 
                 # DISPLAY LINES
@@ -121,7 +121,7 @@ def createScript(title, flag)
                     
                     # DISPLAY LINE NUMBER
                     if lineNum.to_i % 5 == 0
-                        linenumstring = '<p class="lineNum">' + lineNum.to_s + '</p>'
+                        linenumstring = '<p class="lineNum" id="originalLineNum">' + lineNum.to_s + '</p>'
                         htmlstring << linenumstring
                     end
 
@@ -129,21 +129,22 @@ def createScript(title, flag)
                         spwords.each do |word|
                             if word.attr('xml:id').to_s == id
                             # DISPLAY EACH WORD
-                            if (word.inner_text == ".") || (word.inner_text == ",") || (word.inner_text == "?") || (word.inner_text == "!") || (word.inner_text == ";") || (word.inner_text == ":")
-                                wordstring = '<button class="punc" data-cut="false" data-display="true">' + word.inner_text + '</button> '
-                                htmlstring << wordstring
-                            else
-                                if word.inner_text != "" && word.inner_text != " "
-                                    wordstring = '<button class="word" data-cut="false" data-display="true">' + word.inner_text + '</button> '
+                            puts (lineNum)
+                                if (word.inner_text == ".") || (word.inner_text == ",") || (word.inner_text == "?") || (word.inner_text == "!") || (word.inner_text == ";") || (word.inner_text == ":")
+                                    wordstring = '<button class="punc" data-cut="false" data-display="true" data-lineNum='+lineNum.to_s + '>' + word.inner_text + '</button> '
                                     htmlstring << wordstring
+                                else
+                                    if word.inner_text != "" && word.inner_text != " "
+                                        wordstring = '<button class="word" data-cut="false" data-display="true" data-lineNum='+lineNum.to_s + '>' + word.inner_text + '</button> '
+                                        htmlstring << wordstring
+                                    end
                                 end
                             end
                         end
                     end
-                end
 
-                # BREAK FOR NEW LINE
-                htmlstring << '<br>'
+                    # BREAK FOR NEW LINE
+                    htmlstring << '<br class="newLine" data-lineNum='+lineNum.to_s + '>'
 
 
                 stages.each do |stage|
