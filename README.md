@@ -85,8 +85,7 @@ The user can also view analytics calculated by other JavaScript functions.
 The decisions and reasoning for using this architecture is presented later in
 this document.
 
-# Place figure 1 from Phase 3 report here 
-TODO
+# TODO - Place component diagram here
 
 The previous group’s work had scaffolding set up for a user role, a
 constant play role that models the original, unedited work as gathered
@@ -114,7 +113,8 @@ Prerequisites: install Ruby/Rails and git on your machine
 
 
 ## Functionality
-TODO 
+TODO -- Copy the final report's functionality section here
+
 This section outlines our plans to to implement other functionality on top
 of our MVP. 
 1. Viewing: The user will be able to see any Shakespeare play in readable,
@@ -143,8 +143,7 @@ when necessary
 TODO 
 Figure 3 below outlines the use case of each page of the site.
 
-# Place figure 2 from phase 3 report here
-# Place figure 3 from phase 3 report here 
+# Place use case diagram here
 
 ## Known Problems 
 
