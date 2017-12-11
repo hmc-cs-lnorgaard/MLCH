@@ -59,15 +59,15 @@ You must have Ruby on Rails and git on your machine, and clone the repository on
 
 ### Gems 
 1.Nokogiri - this gem is used to parse XML files into HTML files.
+
 ### Minimum Viable Product
-Our MVP will be built off of one of the codebases provided from previous
-semesters. We will use their webpage layout and the parser they worked
-on to put the plays on the site. Forking one of these provided codebases
-should give us a large portion of the functionality desired in our MVP,
+Our MVP is built off of one of the codebases provided from previous
+semesters. We used their webpage layout and the parser they worked
+on to put the plays on the site. Forking it provided some of the functionality desired in our MVP,
 namely choosing a play from those available, reading said play, navigating
 through the play’s acts, and searching text within the chosen play using the
 browser’s search functionality. On top of these pre-provided functions our
-MVP should include the ability to cut out words of the play by highlighting
+MVP included the ability to cut out words of the play by highlighting
 them, and then saving these edits.
 
 ### Architecture Model
@@ -82,7 +82,7 @@ HTML files will be stored on the server. The user starts on the play index,
 and upon choosing a play, the original play HTML file will be displayed,
 formatted by scss. The user will then be able to cut text from the play, which
 will be handled by JavaScript functions. When finished JavaScript will be
-used to save the edited version of the play, which will be loaded from thenon.
+used to save the edited version of the play, which will be loaded from then on.
 The user can also view analytics calculated by other JavaScript functions.
 The decisions and reasoning for using this architecture is presented later in
 this document.
@@ -141,32 +141,31 @@ Step 3: Starting the app after installation
 ## Functionality
 TODO -- Copy the final report's functionality section here
 
-This section outlines our plans to to implement other functionality on top
-of our MVP. 
+This section outlines the total functionality of the app. 
 1. Viewing: The user will be able to see any Shakespeare play in readable,
 aesthetically-pleasing format. This has already been implemented.
 2. Navigation: The user will be able to navigate to any place in the script
-thanks to a navigation bar on one side of the screen. This has already
-been implemented.
+using a navigation bar on one side of the screen.
+
 # Insert gif for navigating play here
+
 3. Strikethrough: The user can cut through words and lines that they
-would like to remove from the play using highlighting.
+would like to remove from the play using highlighting or clicking on a speaker's name.
 
 ![Cutting functionality](https://user-images.githubusercontent.com/21372792/33815748-b6737c72-dde8-11e7-80de-bbca75f0c62d.gif)
 
-4. Saving: The site will either auto-save or allow the user to manually
-save edited versions of each play
-5. Printing: The user will be able to print their full, edited version of the
-play
-6. Analytics: The site will calculate and display information about each
-play, such as the number of lines and characters
+4. Saving: The current state of the play can be saved by clicking the save button in the sidebar. From then on, when the play loads, the most recently saved version will be shown.
+5. Printing: The user van print their full, edited version of the
+play, with or without edits depending on the current toggle view mode.
+6. Analytics: The site calculates and displays information about each
+play, namely the original line number of each character, how many have been deleted, and lines remaining, shown below.
 
 ![Analytics Image](https://user-images.githubusercontent.com/21372792/33813859-58cd7cc4-dddb-11e7-9cf7-c84d169c344c.png)
 
-7. Full and Concise Versions: The user should have the option of viewing
+7. Full and Concise Versions: The user has the option of viewing
 either the full original version of the play, having cuts distinct but
 visible, and the concise version where cuts are removed to see context
-when necessary
+when necessary, shown below.
 
 ![Toggle Functionality Gif](https://user-images.githubusercontent.com/21372792/33815975-a8456974-ddea-11e7-83f1-4d4958cb182e.gif)
 
@@ -177,6 +176,7 @@ Figure 3 below outlines the use case of each page of the site.
 ![Use Case Diagram](https://user-images.githubusercontent.com/21372792/33819054-2f368abe-ddfd-11e7-8862-918c87ab6d21.png)
 
 ## Known Problems 
+If you cut out an entire speech by highlighting, the speaker's name will not automatically be cut out, and vice versa.
 
 ## References 
 George Mason University. 2017. Open Source Shakespeare - Search Shakespeare’s
