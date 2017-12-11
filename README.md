@@ -169,6 +169,8 @@ when necessary, shown below.
 
 ![Toggle Functionality Gif](https://user-images.githubusercontent.com/21372792/33815975-a8456974-ddea-11e7-83f1-4d4958cb182e.gif)
 
+8. Clear Edits: The user can clear all the edits they've made by clicking the 'Clear Edits' button in the side bar. The page will prompt them to confirm this and then return the play to it's original unedited state.
+
 ### Use Case 
 TODO 
 Figure 3 below outlines the use case of each page of the site.
