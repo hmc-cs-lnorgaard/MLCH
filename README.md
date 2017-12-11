@@ -139,11 +139,10 @@ Step 3: Starting the app after installation
 6. To end the application, press `control + c` in your terminal and close the terminal
 
 ## Functionality
-TODO -- Copy the final report's functionality section here
 
 This section outlines the total functionality of the app. 
 1. Viewing: The user will be able to see any Shakespeare play in readable,
-aesthetically-pleasing format. This has already been implemented.
+aesthetically-pleasing format.
 2. Navigation: The user will be able to navigate to any place in the script
 using a navigation bar on one side of the screen.
 
@@ -162,17 +161,17 @@ play, namely the original line number of each character, how many have been dele
 
 ![Analytics Image](https://user-images.githubusercontent.com/21372792/33813859-58cd7cc4-dddb-11e7-9cf7-c84d169c344c.png)
 
-7. Full and Concise Versions: The user has the option of viewing
+7. Synopsis: The play synopsis can be accessed via the 'Synopsis' button in the sidebar.
+8. Full and Concise Versions: The user has the option of viewing
 either the full original version of the play, having cuts distinct but
 visible, and the concise version where cuts are removed to see context
 when necessary, shown below.
 
 ![Toggle Functionality Gif](https://user-images.githubusercontent.com/21372792/33815975-a8456974-ddea-11e7-83f1-4d4958cb182e.gif)
 
-8. Clear Edits: The user can clear all the edits they've made by clicking the 'Clear Edits' button in the side bar. The page will prompt them to confirm this and then return the play to it's original unedited state.
+9. Clear Edits: The user can clear all the edits they've made by clicking the 'Clear Edits' button in the side bar. The page will prompt them to confirm this and then return the play to it's original unedited state.
 
 ### Use Case 
-TODO 
 Figure 3 below outlines the use case of each page of the site.
 
 ![Use Case Diagram](https://user-images.githubusercontent.com/21372792/33819054-2f368abe-ddfd-11e7-8862-918c87ab6d21.png)
