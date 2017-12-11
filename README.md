@@ -54,7 +54,7 @@ to be flexible for use outside of their class for generic directors.
 ## Architecture
 
 ### Prerequisites
-You must have Ruby on Rails and git on your machine, and clone the repository onto your computer from https://github.com/hmc-cs-lnorgaard/MLCH.git
+You must have Ruby on Rails and git on your machine, and clone the repository onto your computer from https://github.com/Pawgrammers/Shakespeare-Script-Editor.git
 
 
 ### Gems 
@@ -146,7 +146,7 @@ aesthetically-pleasing format.
 2. Navigation: The user will be able to navigate to any place in the script
 using a navigation bar on one side of the screen.
 
-# Insert gif for navigating play here
+![Navigating Play](https://user-images.githubusercontent.com/21328366/33822284-dad565da-de0b-11e7-9376-765faf6d088d.gif)
 
 3. Strikethrough: The user can cut through words and lines that they
 would like to remove from the play using highlighting or clicking on a speaker's name.
