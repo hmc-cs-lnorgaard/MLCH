@@ -174,7 +174,7 @@ when necessary
 TODO 
 Figure 3 below outlines the use case of each page of the site.
 
-# Place use case diagram here
+![Use Case Diagram](https://user-images.githubusercontent.com/21372792/33819054-2f368abe-ddfd-11e7-8862-918c87ab6d21.png)
 
 ## Known Problems 
 
