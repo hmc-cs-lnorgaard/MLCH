@@ -54,9 +54,11 @@ to be flexible for use outside of their class for generic directors.
 ## Architecture
 
 ### Prerequisites
-TODO
+You must have Ruby on Rails and git on your machine, and clone the repository onto your computer from https://github.com/hmc-cs-lnorgaard/MLCH.git
+
+
 ### Gems 
-TODO
+1.Nokogiri - this gem is used to parse XML files into HTML files.
 ### Minimum Viable Product
 Our MVP will be built off of one of the codebases provided from previous
 semesters. We will use their webpage layout and the parser they worked
@@ -104,12 +106,10 @@ well with the web applications we have developed previously.
 TODO 
 Prerequisites: install Ruby/Rails and git on your machine
 
-1. Clone the repo: `git clone https://github.com/hmc-cs-lnorgaard/MLCH.git`
+1. Clone the repo: git clone https://github.com/hmc-cs-lnorgaard/MLCH.git
 2. cd into the script_editor folder
-2. Install gems: Nokogiri, bootstrap,
-    use the command `bundle install` in terminal to install gems
-3. Run the app: use the command `rails s` in terminal, then navigate to
-    localhost:3000 in your prefered browser
+3. Install gems: Nokogiri, bootstrap, use the command bundle install in terminal to install gems
+4. use 'rails s' to run the app, then open a browser and go to 'localhost:3000'
 
 
 ## Functionality
