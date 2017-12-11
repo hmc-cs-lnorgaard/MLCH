@@ -87,7 +87,7 @@ The user can also view analytics calculated by other JavaScript functions.
 The decisions and reasoning for using this architecture is presented later in
 this document.
 
-# TODO - Place component diagram here
+![Component Diagram](https://user-images.githubusercontent.com/21372792/33813822-0fd3c730-dddb-11e7-8344-83c8c34ff078.png)
 
 The previous group’s work had scaffolding set up for a user role, a
 constant play role that models the original, unedited work as gathered
@@ -158,7 +158,7 @@ save edited versions of each play
 play
 6. Analytics: The site will calculate and display information about each
 play, such as the number of lines and characters
-# Insert screenshot of analytics here 
+![Analytics Image](https://user-images.githubusercontent.com/21372792/33813859-58cd7cc4-dddb-11e7-9cf7-c84d169c344c.png)
 7. Full and Concise Versions: The user should have the option of viewing
 either the full original version of the play, having cuts distinct but
 visible, and the concise version where cuts are removed to see context
