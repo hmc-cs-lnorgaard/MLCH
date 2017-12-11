@@ -103,14 +103,40 @@ well with the web applications we have developed previously.
 
 
 ## Installation
-TODO 
-Prerequisites: install Ruby/Rails and git on your machine
 
-1. Clone the repo: git clone https://github.com/hmc-cs-lnorgaard/MLCH.git
-2. cd into the script_editor folder
-3. Install gems: Nokogiri, bootstrap, use the command bundle install in terminal to install gems
-4. use 'rails s' to run the app, then open a browser and go to 'localhost:3000'
+Note: After any command saying type `x`, press `enter` before going on to the next command
 
+Step 1: Installing/Updating Ruby
+Note: If you know you have the correct version of Ruby (2.4.1), skip this part
+1. Open terminal on your computer
+2. Type `\curl -sSL https://get.rvm.io | bash -s stable`
+3. Type `rvm install ruby-2.4.1`
+4. Follow installation prompt (Note: usually just requires pressing `enter` a few times and entering password)
+5. Close your terminal to restart it
+
+Step 2: Installing Script Editor
+1. Open terminal on your computer
+2. (Optional) Navigate to where you would like the program to be on your computer
+3. Type `git clone https://github.com/Pawgrammers/Shakespeare-Script-Editor.git`
+(Note: if you need to install git, a popup will occur. Follow it and retry the last step. If no popup occurs, continue following steps here)
+4. Type `cd Shakespeare-Script-Editor/script_editor/`
+5. Type `gem install bundler`
+6. Type `bundle install`
+7. Wait for gems to install
+8. Type `rake db:migrate`
+9. Type `cd app/controllers/`
+10. (Optional)type `ruby create_scripts.rb “all”` (Note: this will preprocess all scripts on the website. It takes about 15 minutes but will make the site run considerably faster)
+11. Wait for scripts to be created
+12. To start the application type `rails s` and go to `localhost:3000` in your internet browser of choice
+13. To end the application, press `control + c` in your terminal and close the terminal
+
+Step 3: Starting the app after installation
+1. Open terminal on your computer
+2. Navigate to where the program was installed
+3. Type `cd Shakespeare-Script-Editor/script_editor/`
+4. Type `rails s`
+5. Open your internet browser and go to `localhost:3000`
+6. To end the application, press `control + c` in your terminal and close the terminal
 
 ## Functionality
 TODO -- Copy the final report's functionality section here
