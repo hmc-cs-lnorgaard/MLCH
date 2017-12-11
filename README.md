@@ -104,7 +104,7 @@ well with the web applications we have developed previously.
 
 ## Installation
 
-Note: After any command saying type `x`, press `enter` before going on to the next command
+Note: After any command saying "Type `x`", press `enter` before going on to the next command
 
 Step 1: Installing/Updating Ruby
 Note: If you know you have the correct version of Ruby (2.4.1), skip this part
