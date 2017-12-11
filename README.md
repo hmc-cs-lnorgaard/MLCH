@@ -151,19 +151,24 @@ been implemented.
 # Insert gif for navigating play here
 3. Strikethrough: The user can cut through words and lines that they
 would like to remove from the play using highlighting.
-# Insert gif for cutting play here 
+
+![Cutting functionality](https://user-images.githubusercontent.com/21372792/33815748-b6737c72-dde8-11e7-80de-bbca75f0c62d.gif)
+
 4. Saving: The site will either auto-save or allow the user to manually
 save edited versions of each play
 5. Printing: The user will be able to print their full, edited version of the
 play
 6. Analytics: The site will calculate and display information about each
 play, such as the number of lines and characters
+
 ![Analytics Image](https://user-images.githubusercontent.com/21372792/33813859-58cd7cc4-dddb-11e7-9cf7-c84d169c344c.png)
+
 7. Full and Concise Versions: The user should have the option of viewing
 either the full original version of the play, having cuts distinct but
 visible, and the concise version where cuts are removed to see context
 when necessary
-# insert screenshot of toggle button here 
+
+![Toggle Functionality Gif](https://user-images.githubusercontent.com/21372792/33815975-a8456974-ddea-11e7-83f1-4d4958cb182e.gif)
 
 ### Use Case 
 TODO 
